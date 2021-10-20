@@ -2,7 +2,8 @@ package analysisofalgorithms.exercise;
 
 public class L05Powerset {
     /**
-     * 멱집합(Powerset)
+     * 멱집합
+     * (Powerset)
      * 대상 집합의 모든 부분 집합을 구한 것을 멱집합(Powerset)이라고 한다.
      *
      * desc : 해당 집합의 모든 경우의 수를 구하는 것이 알고리즘의 핵심이다.
