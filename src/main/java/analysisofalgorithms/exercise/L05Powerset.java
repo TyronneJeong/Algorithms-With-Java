@@ -1,5 +1,9 @@
 package analysisofalgorithms.exercise;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class L05Powerset {
     /**
      * 멱집합
@@ -43,5 +47,36 @@ public class L05Powerset {
                 return sb.toString() + ", " + powerset(charArr, begin+1, end, 1);
             }
         }
+    }
+
+    private void powerSetWithStream(){
+        System.out.println("\n# stream.powerset");
+        String[] strings = {"A", "B", "C", "D", "E", "F"};
+        Stream.of(strings)
+                .map(x->{
+                    AtomicBoolean bAllowed = new AtomicBoolean(false);
+                    int ascCnt = Stream.of(strings)
+                            .filter(e->{
+                                if(x.equalsIgnoreCase(e)) bAllowed.set(true);
+                                return !bAllowed.get();})
+                            .collect(Collectors.toList())
+                            .size();
+                    bAllowed.set(false);
+                    int descCnt = Stream.of(strings)
+                            .filter(e->{
+                                if(x.equalsIgnoreCase(e)) bAllowed.set(true);
+                                return bAllowed.get();})
+                            .collect(Collectors.toList())
+                            .size();
+                    for (int ix = 0; ix <= descCnt; ix++){
+                        Stream.of(strings)
+                                .skip(ascCnt)
+                                .limit(ix)
+                                .forEach(d->System.out.print(d));
+                        System.out.println("");
+                    }
+                    return x;
+                })
+                .forEach(e-> System.out.print(""));
     }
 }
