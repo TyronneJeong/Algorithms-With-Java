@@ -9,6 +9,8 @@ public class AnalysisOfAlgorithms {
 //        L05Powerset l05Powerset = new L05Powerset();
         L06Permutation l06Permutation = new L06Permutation();
         l06Permutation.solution();
+        // 가나다라 마바사
+        // 가나다라 마바사
     }
 
 }

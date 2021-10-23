@@ -3,10 +3,6 @@ package basicofjava.exercise;
 import javax.management.AttributeList;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Collection extends Iterabel<E>
@@ -116,6 +112,11 @@ public class CollectionExample {
          * - Thread-safe 하지 않으므로 개발자가 직접 동기화를 해야 한다.
          * - Thread-safe 한 리스트 : synchronizedList
          * - 배열 인덱스가 존재하여 자료 검색에 유리하다.
+         *
+         * [Keeping vectors efficient]
+         * - 자바의 ArrayList 와 C++ 의 std::vector 는 underlying arrays 를 관리하는 데이터 자료형이다.
+         * 자료가 담길때 마다 이들은 현재 Array 를 삭제하고 새로운 Array를 만들어 Contents를 복사한다.
+         * 때문에 기본적으로 자료가 추가 될 때 마다, 오버 헤드 폭이 증가하게 되며 수행속도는 O(n)에 해당된다.
          */
         arrayList = new ArrayList<>();
         arrayList.add("A");
@@ -231,7 +232,8 @@ public class CollectionExample {
         /**
          * CopyOnWriteArrayList
          * - exnteds Object
-         *
+         * Thread Safe variant of ArrayList & Concurrent collection class
+         * underlying array 구조로 add, set 등의 명령어 입력시 새로운 배열에 복사 대입이 일어난다.
          */
 
         copyOnWriteArrayList = new CopyOnWriteArrayList();
@@ -244,6 +246,252 @@ public class CollectionExample {
         System.out.println("\n# CopyOnWriteArrayList");
         while(it.hasNext()){
             System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * CopyOnWriteArraySet
+         * - exnteds Object
+         * Thread Safe variant of ArrayList & Concurrent collection class
+         * underlying array 구조로 add, set 등의 명령어 입력시 새로운 배열에 복사 대입이 일어난다.
+         */
+        copyOnWriteArraySet = new CopyOnWriteArraySet();
+        copyOnWriteArraySet.add("A");
+        copyOnWriteArraySet.add("B");
+        copyOnWriteArraySet.add("C");
+        copyOnWriteArraySet.add("D");
+
+        it =copyOnWriteArraySet.iterator();
+        System.out.println("\n# CopyOnWriteArraySet");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * DelayQueue
+         * - DelayQueue는 Delayed 타입을 객체를 통해서 지연된 처리를 할 수 있도록 해주는 Interface.
+         * - Delayed 인터페이스를 활용한 Queue
+         * Delay 객체는 주어진 시간 이후 동작하는 객체를 위한 설계되었다.
+         */
+        delayQueue = new DelayQueue();
+        MyDelayed myDelayed1 = new MyDelayed("Sample-1", 4000000000L);
+        MyDelayed myDelayed2 = new MyDelayed("Sample-2", 3000000000L);
+        MyDelayed myDelayed3 = new MyDelayed("Sample-3", 2000000000L);
+        MyDelayed myDelayed4 = new MyDelayed("Sample-4", 1000000000L);
+
+        delayQueue.add(myDelayed1);
+        delayQueue.add(myDelayed2);
+        delayQueue.add(myDelayed3);
+        delayQueue.add(myDelayed4);
+
+        while (!delayQueue.isEmpty()) {
+            MyDelayed md = (MyDelayed) delayQueue.take();
+            System.out.println("### : " + md.name + "반환!!");
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * EnumSet
+         * - 열거형 자료형인 Enum 의 부분 또는 전체 집합(Set)을 관리하는 자료형
+         * - EnumSet의 내부는 bit vector 로 표현된다.
+         * EnumSet의 모든 메서드는 산술 비트 연산을 사용하므로 일반적인 연산이 매우 빠르게 처리된다.
+         * HashSet과 비교했을때 데이터가 예상 가능한 순서로 저장되어 있으며,
+         * 데이터 버킷을 찾기 위한 HashCode 생성이 필요없으며
+         * 연산 처리시 비트 연산이 사용되므로 더 빠르다고 할 수 있다.
+         *
+         * C언어의 bir flag 나 bit mask 등을 대신 해서 EnumSet을 이용할 수 있다.
+         * HashMap 을 대신하여 EnumMap 을 이용할 수 있다.
+         */
+        enumSet = EnumSet.noneOf(Color.class);
+        enumSet = EnumSet.of(Color.RED, Color.BLUE);
+        enumSet.add(Color.GREEN);
+        enumSet.add(Color.BLACK);
+
+        it = enumSet.iterator();
+        System.out.println("\n# EnumSet");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * HashSet
+         * - superinterface - AbstractSet
+         * - 저장순서가 유지되지 않는다. (저장순서 유지 Set - LinkedHashSet
+         * - HashSet 은 정렬되지 않는다. TreeSet 은 정렬을 보장한다.
+         */
+        hashSet = new HashSet();
+        hashSet.add("A");
+        hashSet.add("B");
+        hashSet.add("C");
+        hashSet.add("D");
+
+        // Hash 값은 실제 주소 값과 구별되는 스트링 벨류에 대한 헤쉬 코드 생성 값을 말한다.
+        // 이 HashCode 를 통해 중복을 식별한다.
+        System.out.println("contains >> "+ hashSet.contains("C"));
+
+        it = hashSet.iterator();
+        System.out.println("\n# HashSet");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * LinkedBlockingDeque
+         * -
+         * - 큐가 저장되는 MAX_VALUE 를 지정하여 사용하는 자료형
+         */
+        linkedBlockingDeque = new LinkedBlockingDeque();
+        linkedBlockingDeque.add("A");
+        linkedBlockingDeque.add("B");
+        linkedBlockingDeque.put("C");
+        linkedBlockingDeque.put("D");
+        linkedBlockingDeque.poll();
+
+        System.out.println("\n# LinkedBlockingQueue");
+        it = linkedBlockingDeque.iterator();
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * LinkedBlockingQueue
+         * - 연결된 노드를 기반으로 선택적으로 제한하는 블로킹 큐 자료형
+         * - 큐가 저장되는 MAX_VALUE 를 지정하여 사용하는 자료형
+         */
+        LinkedBlockingQueue linkedBlockingQueue;
+        linkedBlockingQueue = new LinkedBlockingQueue();
+        linkedBlockingQueue.add("A");
+        linkedBlockingQueue.add("B");
+        linkedBlockingQueue.add("C");
+        linkedBlockingQueue.add("D");
+        linkedBlockingQueue.poll();
+
+        it = linkedBlockingQueue.iterator();
+        System.out.println("\n# LinkedBlockingQueue");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * LinkedHashSet
+         * - HashSet의 확장 구현체
+         * - HashSet의 경우 저장값의 정렬을 보장 하지 않지만 Linked 순서를
+         * - Serializable , Cloneable , Iterable<E> , Collection<E> , Set<E>
+         */
+        linkedHashSet = new LinkedHashSet();
+        linkedHashSet.add("A");
+        linkedHashSet.add("B");
+        linkedHashSet.add("C");
+        linkedHashSet.add("D");
+
+        it = linkedHashSet.iterator();
+        System.out.println("\n# LinkedHashSet");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * LinkedList
+         * - 양방향 연결 리스트 (Doubly Linked List)
+         * - 각각의 노드는 데이터와 함께 next , prev 노드 값을 관리한다.
+         * - ArrayList와 같이 배열관리를 안하므로 데이터 추가와 삭제에 용이하다.
+         * - Que 를 구현함에 있어 ArrayDeque 가 LinkedList 보다 낫다는 글이 많다.
+         */
+        linkedList = new LinkedList();
+        linkedList.add("A");
+        linkedList.add("B");
+        linkedList.add("C");
+        linkedList.add("D");
+
+        it = linkedList.iterator();
+        System.out.println("\n# LinkedList");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * LinkedTransferQueue
+         * - Serializable , Iterable<E> , Collection<E> , BlockingQueue<E> , TransferQueue<E> , Queue<E>
+         * - 블록킹 Queue 의 성질을 가지고 있다. + TransferQueue 의 특성을 가지고 있다.
+         * - 소비자 Consumer 가 필요로 할때 메세지 큐를 수신받을 수 있도록 만들어진 자료구조
+         */
+        linkedTransferQueue = new LinkedTransferQueue();
+        linkedTransferQueue.add("A");
+        linkedTransferQueue.add("B");
+        linkedTransferQueue.add("C");
+        linkedTransferQueue.add("D");
+
+        it = linkedTransferQueue.iterator();
+        System.out.println("\n# LinkedTransferQueue");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+    }
+
+    /**
+     * Enumeration - Color
+     */
+    private enum Color {
+        RED, YELLOW, GREEN, BLUE, BLACK, WHITE
+    }
+
+    /**
+     * Enumeration - Coin
+     */
+    private enum Coin {
+        PENNY(1), NICKEL(5), DIME(10), QUATER(25);
+        Coin(int value){this.value = value;}
+        private final int value;
+        public int value() {return value;}
+    }
+
+    /**
+     * Enumeration - CoinColor
+     */
+    private enum CoinColor {COOPER, NICKEL, SILVER};
+    static CoinColor color(Coin c){
+        switch(c){
+            case PENNY:
+                return CoinColor.COOPER;
+            case NICKEL:
+                return CoinColor.COOPER;
+            case DIME:
+            case QUATER:
+                return CoinColor.COOPER;
+            default:
+                throw new AssertionError("Unknown coin: "+c);
+        }
+    }
+
+    /**
+     * DelayQueue 확인을 위한 Deplayed 구현 클래스
+     */
+    class MyDelayed implements Delayed {
+        String name;
+        final long DELAY_TIME = 1000000000L; //모든 Delayed는 1초씩 증가
+        final long EXPIRE_TIME;
+        long accumulateTime = 0; //누적시간
+
+        public MyDelayed(String name ,long expire_time) {
+            this.name = name;
+            this.EXPIRE_TIME = expire_time;
+        }
+        @Override
+        public long getDelay(TimeUnit unit) {
+            this.accumulateTime += DELAY_TIME;
+            System.out.println(name + "가 반환되기까지 남은 시간" + (EXPIRE_TIME - accumulateTime)/1000000000L + "초");
+            return unit.toNanos(EXPIRE_TIME - accumulateTime > 0 ? DELAY_TIME : 0);
+        }
+        @Override
+        public int compareTo(Delayed o) {
+            return Long.compare(this.EXPIRE_TIME , ((MyDelayed)o).EXPIRE_TIME);
         }
     }
 }
