@@ -1,5 +1,9 @@
 package analysisofalgorithms.exercise;
 
+import org.w3c.dom.ls.LSOutput;
+
+import java.util.StringTokenizer;
+
 /**
  * 멱집합과 순열
  * 멱집합과 순열은 문제해결 방식에 있어 가능한 모든 수를 나열 한 후 찾고자 하는 답을 선택 하는 방식의 대표적인 알고리즘 풀이법으로
@@ -25,9 +29,12 @@ package analysisofalgorithms.exercise;
 public class L06Permutation {
     public void solution(){
         char[] charArr = {'a', 'b', 'c'};
-        String sol = permutation(charArr, 0);
-        System.out.println(sol);
+//        String sol = permutation(charArr, 0);
+//        System.out.println(sol);
+
     }
+
+
 
     /**
      * 순열[Permutation]
@@ -51,47 +58,9 @@ public class L06Permutation {
             char selectChar;
 
             for (int i = cursor; i < charArr.length; i++) {
-//                System.out.println("cursor and move >> "+cursor+ "/" + i);
-
                 selectChar = charArr[i];
-                //
-
-//                System.out.println(charArr[i] + permutation(charArr, cursor + 1));
-//                return selectChar + permutation(charArr, cursor);
             }
-            return charArr[cursor] + permutation(charArr, cusor);
+            return charArr[cursor] + permutation(charArr, cursor);
         }
     }
-//    private String permutation(char[] charArr, int cursor, int position, int step, int length, int loopCnt){
-//        if(loopCnt >= length){
-//            return ""; // recursion 종료식
-//        } else {
-//            System.out.println("cursor and move >> "+cursor+"/"+position+"/"+step + "/" + loopCnt);
-//            // 첫번째 케릭터를 추출해 봅시다.
-//            char pickedChar; // 첫번째 항을 가리킨다. A를 가진다.
-//            pickedChar = charArr[cursor];
-//
-//            // 찻으면 다음 포지션
-//            if(position < length) {
-//                // Loop
-//                if (cursor + 1 < length) {
-//                    return pickedChar + permutation(charArr, cursor + 1, position, step, length, loopCnt);
-//                } else {
-//                    // Loop
-//                    if(position + 1 < length) {
-//                        return pickedChar + "\n" + permutation(charArr, 0, position + 1, step, length, loopCnt);
-//                    } else {
-//                        // Loop
-//                        if(step + 1 < length){
-//                            return pickedChar + "\n" + permutation(charArr, 0, 0, step + 1, length, loopCnt);
-//                        } else {
-//                            return pickedChar + "\n" + permutation(charArr, 0, 0, 0, length, loopCnt + 1);
-//                        }
-//                    }
-//                }
-//            }
-//            // -- end --
-//        }
-//        return null;
-//    }
 }
