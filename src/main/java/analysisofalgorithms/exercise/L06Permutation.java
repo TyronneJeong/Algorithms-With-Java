@@ -1,6 +1,33 @@
 package analysisofalgorithms.exercise;
 
+/**
+ * 멱집합과 순열
+ * 멱집합과 순열은 문제해결 방식에 있어 가능한 모든 수를 나열 한 후 찾고자 하는 답을 선택 하는 방식의 대표적인 알고리즘 풀이법으로
+ * 멱집합은 순서가 무관 한 경우(원소가 등장 하기만 하는 모든 경우의 수),
+ * 순열은 순서에 상관 관계를 지닌 경우 (원소의 위치별로 등장 하는 모든 경우의 수) 를 찾는 대표적인 알고리즘 풀이법이다.
+ *
+ * 상태공간트리(state space tree)
+ * - 문제를 해결하기 위한 모든 경우의 수를 나열한 트리를 의미한다. search tree
+ *
+ * 모든 가능한 수를 나열한 후 원하는 답을 찾는 방식의 문제의 대표적인 예로
+ * - 배낭문제 와 TSP 가 있다.
+ *
+ * 배낭문제 (Knapsack Problem) = O(2^n) = 지수시간 exp
+ * - n 개의 아이탬 (무게와 가격속성을 가진 아이템) 배낭의 용량을 초과하지 않으면서 가격의 합이 최대가 되도록 아이탬을 담으려면?
+ * - n 개의 아이탬으로 구성된 모든 조합을 나열할 후, 가격의 합이 최대가 되는 조합을 선택하면 된다.
+ * - 이때 n 개의 아이탬으로 조합가능한 모든 집합(멱집합)을 구하는 시간 복잡도가 O(2^n)이 된다.
+ *
+ * TSP (Traveling Salesperson's Problem)
+ * - 세일즈맨이 방문지를 여행하는 순서를 어떤식으로 구성을 해야 최대의 효율을 보이는지를 찾는 문제.
+ * - 가능한 모든 경로를 도출 한 후, 가장 시간이 적게 걸리는 루트를 찾으면 된다.
+ * - 이때 n개의 경로들 마다 상대 지점으로 가는 모든 거리값이 지수로 나눠지며, 그 경로의 수는 O(2^n)개에 해당된다.
+ */
 public class L06Permutation {
+    public void solution(){
+        char[] charArr = {'a', 'b', 'c'};
+        String sol = permutation(charArr, 0);
+        System.out.println(sol);
+    }
 
     /**
      * 순열[Permutation]
@@ -16,83 +43,55 @@ public class L06Permutation {
      * 발생 가능한 모든 경우의 수는 = 4 * 3 * 2 * 1 = 24개가 된다.
      * 이는 factorial 과 동일하다.
      */
-    public void solution(){
-        char[] charArr = {'a', 'b', 'c', 'd'};
-        char[] resultArr = {};
-        // 비트마스크 출력 예제
-        System.out.println(Integer.toBinaryString(1 << 63));
-
-
-        /**
-         * a, b, c, d
-         * a, b, d, c
-         * a, c, d, b
-         * a, c, b, d
-         * a, d, b, c
-         * a, d, c, b
-         *
-         * b, a, c, d
-         * b, a, d, c
-         * b, c, a, d
-         * b, c, d, a
-         * b, d, a, c
-         * b, d, c, a
-         *
-         * c..
-         * d..
-         * 
-         * 리커젼 특징은 하나의 원소가 선택 된 후 나머지 원소들 전체를 한번씩 대입하여 결과를 출력한다는 것
-         * a, b, c, d 진행
-         * [a] 고정
-         *     b, c, d 진행
-         *    [b] 고정
-         *        c, d 진행 식
-         *
-         *  진행 커서가 존재해야 한다.
-         *  현재 커서
-         *  그리고 종료식을 만들기 위해 end 값도 가지고 있어야 함.
-         *  커서와 end 가 같으면 리턴
-         */
-
-        String sol = permutation(charArr, resultArr, 0, 3, 0);
-        System.out.println(sol);
-    }
-
-    private String permutation(char[] charArr, char[] resultArr, int begin, int end, int cursor){
-        // 오류처리
-        if(begin > end){
-            return null;
+    private String permutation(char[] charArr, int cursor){
+        if(cursor > charArr.length){
+            return ""; // recursion 종료식
         } else {
-            // 종료식
-            if(cursor > end ){// Loop 식 1
-                return "";
-            } else {
+            //
+            char selectChar;
 
-                // for 를 써야 할듯
-//                for (int x = cursor; x <= end; x++) { // 현재 위치에서 부터 나머지를 찾기
-//                    for (int i = begin; i <= end; i++) {
-//                        System.out.println("move to : >>" + i + " / " + x);
-//                    }
-//                }
-                char pickedChar;
+            for (int i = cursor; i < charArr.length; i++) {
+//                System.out.println("cursor and move >> "+cursor+ "/" + i);
 
+                selectChar = charArr[i];
+                //
 
-                System.out.println("cursor and move >> "+cursor+"/"+begin);
-
-                // 바깥에서 배열 길이만큼 루프 시키면 됨. 문자열 조합만 맞추자.
-                // 이전에 어떤 글자가 선택 되었는지 알수 있는 방법은?
-                // 결과 배열을 인자로 넘길까?
-
-                // charArr / result / cursor
-
-
-                if (begin < end) {
-                    return charArr[cursor] + permutation(charArr, resultArr, begin+1, end, cursor);
-                } else {
-                    // 점화식을 둘로 분리하여 하나는 Loop 하나는 종료로 처리해야 할듯.
-                    return charArr[cursor] + permutation(charArr, resultArr, 0, end, cursor + 1);
-                }
+//                System.out.println(charArr[i] + permutation(charArr, cursor + 1));
+//                return selectChar + permutation(charArr, cursor);
             }
+            return charArr[cursor] + permutation(charArr, cusor);
         }
     }
+//    private String permutation(char[] charArr, int cursor, int position, int step, int length, int loopCnt){
+//        if(loopCnt >= length){
+//            return ""; // recursion 종료식
+//        } else {
+//            System.out.println("cursor and move >> "+cursor+"/"+position+"/"+step + "/" + loopCnt);
+//            // 첫번째 케릭터를 추출해 봅시다.
+//            char pickedChar; // 첫번째 항을 가리킨다. A를 가진다.
+//            pickedChar = charArr[cursor];
+//
+//            // 찻으면 다음 포지션
+//            if(position < length) {
+//                // Loop
+//                if (cursor + 1 < length) {
+//                    return pickedChar + permutation(charArr, cursor + 1, position, step, length, loopCnt);
+//                } else {
+//                    // Loop
+//                    if(position + 1 < length) {
+//                        return pickedChar + "\n" + permutation(charArr, 0, position + 1, step, length, loopCnt);
+//                    } else {
+//                        // Loop
+//                        if(step + 1 < length){
+//                            return pickedChar + "\n" + permutation(charArr, 0, 0, step + 1, length, loopCnt);
+//                        } else {
+//                            return pickedChar + "\n" + permutation(charArr, 0, 0, 0, length, loopCnt + 1);
+//                        }
+//                    }
+//                }
+//            }
+//            // -- end --
+//        }
+//        return null;
+//    }
 }
