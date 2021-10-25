@@ -29,12 +29,9 @@ import java.util.StringTokenizer;
 public class L06Permutation {
     public void solution(){
         char[] charArr = {'a', 'b', 'c'};
-//        String sol = permutation(charArr, 0);
-//        System.out.println(sol);
-
+        String sol = permutation(charArr, 0);
+        System.out.println(sol);
     }
-
-
 
     /**
      * 순열[Permutation]
@@ -54,13 +51,30 @@ public class L06Permutation {
         if(cursor > charArr.length){
             return ""; // recursion 종료식
         } else {
-            //
+            // 전체 갯수를 구하는것 맞춤
+            // 그럼 전체 카운트를 하면서 하나씩 케이스를 까주면 되는거 아닌가?
+            // 케이스를 까주자.
+
+
             char selectChar;
 
             for (int i = cursor; i < charArr.length; i++) {
                 selectChar = charArr[i];
+                System.out.println("Loop Cnt : >>" + i);
+
+                // 여기서 도출 해야 맞음.
+                // 여기가 하나씩 계수중이니까.
+
+                // a, b, c
+                // a, c, b
+                // b, a, c
+                // b, c, a
+                // c, a, b
+                // c, b, a
+
+
             }
-            return charArr[cursor] + permutation(charArr, cursor);
+            return permutation(charArr, cursor+1);
         }
     }
 }
