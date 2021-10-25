@@ -1,13 +1,15 @@
 package programmers;
 
-import programmers.exercise.hash.E01UncompletedRace;
-
-import java.util.StringTokenizer;
+import programmers.exercise.hash.ListOfPhoneNumbers;
+import programmers.exercise.hash.UncompletedRace;
 
 public class Programmers {
     public static void main(String[] args) {
         // Hash
-        E01UncompletedRace solution = new E01UncompletedRace();
-        solution.exec();
+        //UncompletedRace uncompletedRace = new UncompletedRace();
+        //uncompletedRace.exec();
+        
+        ListOfPhoneNumbers listOfPhoneNumbers = new ListOfPhoneNumbers();
+        listOfPhoneNumbers.exec();
     }
 }

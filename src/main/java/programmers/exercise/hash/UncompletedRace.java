@@ -23,7 +23,7 @@ import java.util.HashSet;
  * ["mislav", "stanko", "mislav", "ana"]	["stanko", "ana", "mislav"]	"mislav"
  */
 
-public class E01UncompletedRace {
+public class UncompletedRace {
     public void exec(){
         String[] participant = {"mislav", "stanko", "mislav", "ana"};
         String[] completion = {"stanko", "ana", "mislav"};
