@@ -48,19 +48,16 @@ public class L06Permutation {
      * 이는 factorial 과 동일하다.
      */
     private String permutation(char[] charArr, int cursor){
-        if(cursor > charArr.length){
+        if(cursor >= charArr.length){
             return ""; // recursion 종료식
         } else {
             // 전체 갯수를 구하는것 맞춤
             // 그럼 전체 카운트를 하면서 하나씩 케이스를 까주면 되는거 아닌가?
             // 케이스를 까주자.
-
-
-            char selectChar;
+            System.out.println("Depth : "+cursor);
 
             for (int i = cursor; i < charArr.length; i++) {
-                selectChar = charArr[i];
-                System.out.println("Loop Cnt : >>" + i);
+                System.out.println("Loop Cnt : >> " + i + " charactor : >> " + charArr[i]);
 
                 // 여기서 도출 해야 맞음.
                 // 여기가 하나씩 계수중이니까.
@@ -73,8 +70,34 @@ public class L06Permutation {
                 // c, b, a
 
 
+                // [i]
+                // a [b, c]
+                // b [a, c]
+                // c [a, b]
+
+
+
+                // swap 이 있어야 한다고?
+                // 최종적으로 나오는 형태를 기준으로 로직 설계를 진행한다?!?
+//                swap(charArr, i, i+1);
+
+                permutation(charArr, cursor+1); // iterator 역할
+//                swap(charArr, i, i+1);
             }
-            return permutation(charArr, cursor+1);
+            return "";
         }
+    }
+
+    private void swap(char[] charArr, int a, int b){
+        if(a >= charArr.length){
+            a = a - charArr.length;
+        }
+        if(b >= charArr.length){
+            b = b - charArr.length;
+        }
+        char ca = charArr[a];
+        char cb = charArr[b];
+        charArr[b] = ca;
+        charArr[a] = cb;
     }
 }
