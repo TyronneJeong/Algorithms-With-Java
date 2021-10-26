@@ -1,5 +1,9 @@
 package programmers.exercise.hash;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * [문제 설명]
  * 스파이들은 매일 다른 옷을 조합하여 입어 자신을 위장합니다.
@@ -24,23 +28,171 @@ package programmers.exercise.hash;
  * [입출력 예]
  * clothes	                                                                                  return
  * {{"yellowhat", "headgear"}, {"bluesunglasses", "eyewear"}, {"green_turban", "headgear"}}	     5
- * {{"crowmask", "face"]     , ["bluesunglasses", "face"]   , ["smoky_makeup", "face"}}	         3
+ * {{"crowmask", "face"}, {"bluesunglasses", "face"}, {"smoky_makeup", "face"}}	                 3
  */
 public class Camouflage {
     public void exec(){
-        String[][] strArr = {{"yellowhat", "headgear"}, {"bluesunglasses", "eyewear"}, {"green_turban", "headgear"}};
+//        String[][] strArr = {{"crowmask", "face"}, {"bluesunglasses", "face"}, {"smoky_makeup", "face"}};
+//        String[][] strArr = {{"yellowhat", "headgear"}, {"bluesunglasses", "eyewear"}, {"green_turban", "headgear"}};
+
+        String[][] strArr = {{"crowmask", "A"},{"crowmask", "A"},{"crowmask", "A"},{"bluesunglasses", "B"},{"bluesunglasses", "B"},{"smoky_makeup", "C"}};
+
+//        String[][] strArr = {{"crowmask", "A"},{"crowmask", "A"},{"crowmask", "A"},
+//                {"bluesunglasses", "B"},{"bluesunglasses", "B"},
+//                {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"}, {"smoky_makeup", "C"},
+//                {"smoky_makeup", "D"},{"smoky_makeup", "D"},{"smoky_makeup", "D"},{"smoky_makeup", "D"},{"smoky_makeup", "D"},{"smoky_makeup", "D"},{"smoky_makeup", "D"}
+//        };
+
+//        String[][] strArr = {{"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"},
+//                {"crowmask", "A"},
+//                {"crowmask", "B"},
+//                {"crowmask", "C"},
+//                {"crowmask", "D"}
+//        };
+
+
         System.out.println(solution(strArr));
     }
 
-    // 중복된 항목을 제거하고 조합 가능한 가짓 수를 출력한다.
-    // 모든 경우의 수 산출 문제
-    // 종류가 들어가 있네..
-    // 종류 : [얼굴], [상의], [하의], [겉옷]
-    // 종류가 있고 종류별로 하나이상 변화해야 한다.
-    //
-    
     public int solution(String[][] clothes) {
+        HashMap<String, Integer> hm = new HashMap<>();
+        for (int i = 0; i < clothes.length; i++) {
+            if(hm.containsKey(clothes[i][1])){
+                hm.put(clothes[i][1], hm.get(clothes[i][1]) + 1);
+            } else {
+                hm.put(clothes[i][1], 1);
+            }
+        }
         int answer = 0;
+        int cnt = 0;
+
+        int val = 0; // 대입 값
+        int a = 0; // 덧셈
+        int b = 0; // 곱셈
+        Iterator it = hm.keySet().iterator();
+        while(it.hasNext()){
+            val = hm.get(it.next());
+            a = a + val;
+            switch(cnt){
+                case 0:
+                    b = val;
+                    cnt = 1;
+                    break;
+                case 1:
+                    b *= val;
+                    cnt = 3;
+                    break;
+                default:
+                    cnt += 3;
+                    b += (val * cnt) + 1;
+                    break;
+            }
+        }
+
+        if(hm.keySet().size() > 1){
+            answer = a + b;
+        } else {
+            answer = a;
+        }
         return answer;
     }
+
+// 산술적인 계산 로직 (중복된 착용이 계산 누락 됨)
+//    public int solution(String[][] clothes) {
+//        HashMap<String, Integer> hm = new HashMap<>();
+//        for (int i = 0; i < clothes.length; i++) {
+//            if(hm.containsKey(clothes[i][1])){
+//                hm.put(clothes[i][1], hm.get(clothes[i][1]) + 1);
+//            } else {
+//                hm.put(clothes[i][1], 1);
+//            }
+//        }
+//        AtomicInteger single = new AtomicInteger();
+//        AtomicInteger multiply  = new AtomicInteger();
+//
+//        int answer = 0;
+//        AtomicInteger count = new AtomicInteger();
+//        if(hm.keySet().size() > 1) {
+//            hm.forEach((K, V) -> {
+//                single.set(single.get() + V);
+//                if(count.get() == 0){
+//                    multiply.set(V);
+//                    count.addAndGet(1);
+//                } else {
+//                    multiply.set(multiply.get() * V * count.get());
+//                    count.addAndGet(2);
+//                }
+//            });
+//            answer = single.get() + multiply.get();
+//        } else {
+//            hm.forEach((K, V) -> {
+//                multiply.set(1 * V);
+//            });
+//            answer = multiply.get();
+//        }
+//        return answer;
+//    }
+
+
+//    public int solution(String[][] clothes) {
+//        HashMap<String, Integer> hm = new HashMap<>();
+//        for (int i = 0; i < clothes.length; i++) {
+//            if(hm.containsKey(clothes[i][1])){
+//                hm.put(clothes[i][1], hm.get(clothes[i][1]) + 1);
+//            } else {
+//                hm.put(clothes[i][1], 1);
+//            }
+//        }
+//
+//        int answer = 0;
+//        int cnt = 0;
+//        int[] cntArr = {0, 1, 3, 7};
+//
+//        int val = 0; // 대입 값
+//        int a = 0; // 덧셈
+//        int b = 0; // 곱셈
+//        Iterator it = hm.keySet().iterator();
+//        while(it.hasNext()){
+//            String key = (String)it.next();
+//            val = hm.get(key);
+//            a = a + val;
+//            if(cnt == 0){
+//                b = val;
+//            } else if(cnt == 1){
+//                b = b * val;
+//            } else {
+//                b = b + (val * cntArr[cnt]) + 1;
+//            }
+//            cnt += 1;
+//        }
+//        if(hm.keySet().size() > 1){
+//            answer = a + b;
+//        } else {
+//            answer = a;
+//        }
+//        return answer;
+//    }
 }
