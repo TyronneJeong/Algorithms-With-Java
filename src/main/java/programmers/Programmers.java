@@ -6,6 +6,7 @@ import programmers.exercise.hash.UncompletedRace;
 import programmers.exercise.skilltest.CountingPrimeNumber;
 import programmers.exercise.skilltest.DistinctNumb;
 import programmers.exercise.skilltest.NoMoreMath;
+import programmers.exercise.stackandque.Development;
 
 public class Programmers {
     public static void main(String[] args) {
@@ -25,7 +26,10 @@ public class Programmers {
 //        DistinctNumb distinctNumb = new DistinctNumb();
 //        distinctNumb.exec();
 
-        CountingPrimeNumber countingPrimeNumber = new CountingPrimeNumber();
-        countingPrimeNumber.exec();
+        //CountingPrimeNumber countingPrimeNumber = new CountingPrimeNumber();
+        //countingPrimeNumber.exec();
+
+        Development development = new Development();
+        development.exeC();
     }
 }

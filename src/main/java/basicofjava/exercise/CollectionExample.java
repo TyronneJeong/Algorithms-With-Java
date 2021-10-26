@@ -55,8 +55,8 @@ public class CollectionExample {
     private LinkedTransferQueue linkedTransferQueue;
 
     /* etc */
+    private PriorityQueue priorityQueue;
     private Stack stack;
-    private SynchronousQueue synchronousQueue;
     private TreeSet treeSet;
     private Vector vector;
 
@@ -320,6 +320,9 @@ public class CollectionExample {
          * - superinterface - AbstractSet
          * - 저장순서가 유지되지 않는다. (저장순서 유지 Set - LinkedHashSet
          * - HashSet 은 정렬되지 않는다. TreeSet 은 정렬을 보장한다.
+         * - 저장되는 자료형은 모두 Object 로 취급 한다.
+         * - Hash 검색을 위한 인덱스가 없어서 HashMap 보다 성능이 떨어진다.
+         * - Set 의 내부구현은 결국 Map 이다.
          */
         hashSet = new HashSet();
         hashSet.add("A");
@@ -430,6 +433,108 @@ public class CollectionExample {
 
         it = linkedTransferQueue.iterator();
         System.out.println("\n# LinkedTransferQueue");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * PriorityQueue
+         * - 우선순위 QUEUE 는 FIFO(First In First Out)의 자료형으로 여기에 우선순위 옵션이 추가된 자료형이다..
+         * - 내부는 이진트리 구조로 구성되어 있다.
+         *
+         */
+        priorityQueue = new PriorityQueue(Collections.reverseOrder()); // 역순의 우선순위지정
+        priorityQueue.add("A");
+        priorityQueue.add("B");
+        priorityQueue.add("C");
+        priorityQueue.add("D");
+        priorityQueue.offer("Z");
+
+        System.out.println("가장 높은 우선순위 >> "+priorityQueue.peek());
+
+        priorityQueue.poll();
+
+        it = priorityQueue.iterator();
+        System.out.println("\n# PriorityQueue");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * Stack
+         * - LIFO (Last In First Out) 의 대표적인 자료구조
+         * - 그래프 깊이 우선 탐색(DFS)에 사용
+         */
+        stack = new Stack();
+        stack.add("A");
+        stack.add("B");
+        stack.push("C");
+        stack.push("D");
+
+        System.out.println("pop something >> " + stack.pop()); // 마지막 추가 항목이 출력됨
+
+        it = stack.iterator();
+        System.out.println("\n# Stack");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * TreeSet
+         * - Set 의 구현체이다.
+         * - HashSet 과 다른점은 TreeSet 은 이진 탐색트리 구조로 구성되어 있다.
+         * - HashSet 과 비교하여 데이터의 추가와 삭제에는 시간이 더 걸린다.
+         * - 이진탐색트리(BinarySearchTree) 형태로 저장하기 때문에 기본적으로 nature ordering 을 지원한다.
+         * - Comparator(비교회로) 객체를 이용하여 정렬방법을 임의로 지정해 줄 수 있다.
+         *
+         * [Red-Black Tree]
+         * - TreeSet 은 이진탐색트리중에서도 성능을 향상시킨 레드-블랙 트리로 구현되어 있다. 일반적으로 이진
+         * 탐색트리는 트리의 높이(Depth)만큼 시간이 걸리지만 데이터의 값이 트리에 잘 분산되어 있지 않은 경우
+         * 최종 결과값 도출 까지 상당한 시간을 소모하게 된다. 이런 데이터 클러스터링 문제를 해결한 것이 레드
+         * 블랙 트리가 된다. 레드 블랙 트리는 부모노드 보다 작은 값은 왼쪽으로, 큰 값은 오른쪽 노르도 배치하여
+         * 데이터 추가 삭제시 트리가 한쪽으로 치우치는 것을 방지하여 준다.
+         */
+        treeSet = new TreeSet(new Comparator<String>(){
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+                //return o1.trim().compareTo(o2.trim());
+            }
+        });
+        treeSet.add("A");
+        treeSet.add(" C");
+        treeSet.add("D");
+        treeSet.add(" B");
+        treeSet.stream().sorted(String.CASE_INSENSITIVE_ORDER);
+
+        it = treeSet.iterator();
+        System.out.println("\n# TreeSet");
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+
+        System.out.println("\n########################################################");
+        /**
+         * Vector (리스트)
+         * - AbstractList<E> 를 상속받은 객체 고로 기본적으로 List 이다.
+         * - implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+         * - 객체직렬화가 보장되는 자료형으로 ArrayList 와 쓰임새가 비슷하다.
+         * - 스레드간 동기화를 위해 객체직렬화하는 비용이 크다. 때문에 ArrayList 보다는 성능이 다소 떨어진다.
+         * - ArrayList 와는 다르게 인덱스 값을 보관하는 배열을 따로 설정 하지 않는다.
+         */
+        vector = new Vector();
+        vector.add("A");
+        vector.add("B");
+        vector.add("C");
+        vector.add("D");
+        vector.set(1, "H");
+        vector.add(1, "B"); // 인덱스를 지정하여 Element 를 추가하면 나머지 모든 항목을 한칸씩 뒤로 밀어낸다.
+
+        it = vector.iterator();
+        System.out.println("\n# Vector");
         while(it.hasNext()){
             System.out.println(it.next());
         }

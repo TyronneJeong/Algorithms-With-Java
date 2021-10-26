@@ -8,7 +8,7 @@ public class BasicOfJava {
         CollectionExample collectionExample = new CollectionExample();
         MapExample mapExample = new MapExample();
         try {
-            mapExample.exec();
+            collectionExample.exec();
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

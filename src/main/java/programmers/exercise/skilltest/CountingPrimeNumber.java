@@ -38,9 +38,7 @@ public class CountingPrimeNumber {
         int checkNum = 0;
         // 3개의 수를 더하여 그 합이 소수 인 경우를 판별하여 그 갯수를 리턴
         for (int i = 0; i < nums.length; i++) {
-
             for (int c = i+1; c < nums.length; c++) {
-
                 for (int j = c+1; j < nums.length; j++) {
                     checkNum = nums[i] + nums[c] + nums[j];
                     if(isPrimeNumber(checkNum)){
@@ -54,6 +52,7 @@ public class CountingPrimeNumber {
         }
         return answer;
     }
+
     // 소수판별 함수
     private boolean isPrimeNumber(int numb){
         for (int i = 2; i < numb; i++) {

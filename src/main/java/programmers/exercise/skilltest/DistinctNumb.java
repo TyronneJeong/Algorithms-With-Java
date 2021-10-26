@@ -21,6 +21,7 @@ public class DistinctNumb {
             ar.add(arr[i]);
             prevNumb = arr[i];
         }
-        return ar.stream().mapToInt(i->i).toArray();
+        // return ar.stream().mapToInt(i->i).toArray();
+        return ar.stream().mapToInt(Integer::intValue).toArray();
     }
 }
