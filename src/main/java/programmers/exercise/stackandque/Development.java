@@ -60,8 +60,6 @@ public class Development {
     // 각 배포 때마다 동시에 배포되는 항목 수
     public int[] solution(int[] progresses, int[] speeds) {
         ArrayList<Integer> arrList = new ArrayList<>();
-        int[] answer = {};
-
         int remainDays = 0;
         for (int i = 0; i < progresses.length; i++) {
             remainDays = (int)Math.ceil( ((float)(100 - progresses[i]) / speeds[i]) );
@@ -69,12 +67,12 @@ public class Development {
         }
 
         ArrayList<Integer> ar = new ArrayList<>();
-        Iterator<Integer> it =arrList.iterator();
+        Iterator<Integer> it = arrList.iterator();
 
         int currNumb = 0;
         int leadNumb = 0;
-
         int cnt = 0;
+
         while(it.hasNext()){
             currNumb = it.next();
             if(currNumb > leadNumb){
@@ -87,8 +85,7 @@ public class Development {
                 cnt++;
             }
         }
-        // 마지막 까지 누적 된 경우
-        if(cnt>0){
+        if(cnt>0){ // 마지막 까지 누적 된 경우
             ar.add(cnt);
         }
         return ar.stream().mapToInt(i->i).toArray();

@@ -403,7 +403,8 @@ public class CollectionExample {
          * LinkedList
          * - 양방향 연결 리스트 (Doubly Linked List)
          * - 각각의 노드는 데이터와 함께 next , prev 노드 값을 관리한다.
-         * - ArrayList와 같이 배열관리를 안하므로 데이터 추가와 삭제에 용이하다.
+         * - ArrayList와 달리 인덱싱을 위한 배열관리가 없으므로 데이터 추가와 삭제에 용이하다.
+         * - 반면 데이터 검색시 처음 노드부터 차례로 순회해야 하기 때문에 성능상 불리하다.
          * - Que 를 구현함에 있어 ArrayDeque 가 LinkedList 보다 낫다는 글이 많다.
          */
         linkedList = new LinkedList();
