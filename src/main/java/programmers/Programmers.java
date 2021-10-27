@@ -1,5 +1,7 @@
 package programmers;
 
+import programmers.etc.LottaryScore;
+import programmers.etc.RecommenNewID;
 import programmers.exercise.hash.Camouflage;
 import programmers.exercise.hash.ListOfPhoneNumbers;
 import programmers.exercise.hash.UncompletedRace;
@@ -50,7 +52,14 @@ public class Programmers {
         //kNumber.exec();
 
         // 입력된 숫자로 가장 큰 숫자조합을 찾아내세요
-        BiggestNumber biggestNumber = new BiggestNumber();
-        biggestNumber.exec();
+        //BiggestNumber biggestNumber = new BiggestNumber();
+        //biggestNumber.exec();
+
+        // 임의의 빈칸과 로또 최고 최저 등수
+        //LottaryScore lottaryScore = new LottaryScore();
+        //lottaryScore.exec();
+
+        RecommenNewID recommenNewID = new RecommenNewID();
+        recommenNewID.exec();;
     }
 }
