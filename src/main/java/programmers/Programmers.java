@@ -2,10 +2,10 @@ package programmers;
 
 import programmers.codechallenge.*;
 import programmers.etc.*;
-import programmers.etc2.FindPrimeNumb;
-import programmers.etc2.Subaksu;
+import programmers.etc2.*;
 import programmers.exercise.completeexploration.MockExam;
 import programmers.exercise.greedyalgorithm.TrainingSuite;
+import programmers.kakao.DartGame;
 
 public class Programmers {
     public static void main(String[] args) {
@@ -14,8 +14,48 @@ public class Programmers {
         //subaksu.exec();
 
         // 입력된 숫자 까지에 존재하는 모든 소수의 갯수를 구하여라.
-        FindPrimeNumb findPrimeNumb = new FindPrimeNumb();
-        findPrimeNumb.exec();
+        //FindPrimeNumb findPrimeNumb = new FindPrimeNumb();
+        //findPrimeNumb.exec();
+
+        // 주어진 배열의 원소를 조합하여 생성 가능한 소수를 찾으시오.
+        //MakePrimeNumb makePrimeNumb = new MakePrimeNumb();
+        //makePrimeNumb.exec();
+
+        // 문자열 배열속에서 Kim 이 존재하는 인덱스 찾기 - 1점짜리
+        //FindMrKim findMrKim = new FindMrKim();
+        //findMrKim.exec();
+
+        // 문자열 길이 4와 6으로 이루어진 숫자를 판독 하시오.
+        //ControlStrings controlStrings = new ControlStrings();
+        //controlStrings.exec();
+
+        // 스트링 코드를 역순으로 정렬하시오.
+        //StringSort stringSort = new StringSort();
+        //stringSort.exec();
+
+        // 대소문자가 섞인 문자열에서 p 와 y의 개수를 비교하여 같으면 true 를 다르면 false 를 리턴하다. - 1점짜리
+        //CountPandY countPandY = new CountPandY();
+        //countPandY.exec();
+
+        // 주어진 문자열 배열들의 원소 위치를 지정하면 해당 글자를 기준으로 정렬을 실행하라.
+        //StringSort2 stringSort2 = new StringSort2();
+        //stringSort2.exec();
+
+        // 두 정수가 주어질때 두 정수 사이의 모든 정수의 합을 계산하씨오.
+        //SumOfTwoInteger  sumOfTwoInteger = new SumOfTwoInteger();
+        //sumOfTwoInteger.exec();
+
+        // 입력된 숫자 배열과 Divisor 를 이용하여 나누어 떨어지는 숫자들의 배열을 뱉으세요.
+        //DivideArray divideArray = new DivideArray();
+        //divideArray.exec();
+
+        // 배열내 연속된 숫자는 하나만 남기고 모두 삭제한다.
+        //DistinctSameNumber distinctSameNumber = new DistinctSameNumber();
+        //distinctSameNumber.exec();
+
+        // 다트게임
+        DartGame dartGame = new DartGame();
+        dartGame.exec();
     }
 
     private void season01(){

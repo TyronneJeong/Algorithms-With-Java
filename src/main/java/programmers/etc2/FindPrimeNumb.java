@@ -37,7 +37,7 @@ public class FindPrimeNumb {
         return answer;
     }
     private boolean isPrime(int numb){
-        for (int i = 2; i < numb; i++) {
+        for (int i = 2; i <= Math.sqrt(numb); i++) {
             if(numb % i == 0) return false;
         }
         return true;
