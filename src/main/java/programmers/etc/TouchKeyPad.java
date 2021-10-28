@@ -59,18 +59,21 @@ package programmers.etc;
  */
 public class TouchKeyPad {
     public void exec(){
-        int[] numbers = {1, 3, 4, 5, 8, 2, 1, 4, 5, 9, 5};
-        String hand = "right"; // LRLLLRLLRRL
-                               // LRLLLRLLLRR
+//        int[] numbers = {1, 3, 4, 5, 8, 2, 1, 4, 5, 9, 5}; // right - LRLLLRLLRRL
+//        int[] numbers = {7, 0, 8, 2, 8, 3, 1, 5, 7, 6, 2}; // left - LRLLRRLLLRR
+//        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}; // right - LLRLLRLLRL
+        int[] numbers = {3, 6, 9, 1, 4, 7, 2, 5, 8, 0, 1, 2, 5, 3, 2, 5, 8, 0};
+        String hand = "right";
         System.out.println(solution(numbers, hand));
     }
 
+    // 테스트케이스 66% 커버 - 테스트케이스 확인이 불가.
     public String solution(int[] numbers, String hand) {
         StringBuffer sb = new StringBuffer(numbers.length);
-        int lastL = 0;
-        int lastR = 0;
-        int calcL = 10;
-        int calcR = 12;
+        int lastL = 10;
+        int lastR = 12;
+        int calcL = 0;
+        int calcR = 0;
         for (int i = 0; i < numbers.length; i++) {
             switch(numbers[i]){
                 case 2:
@@ -80,32 +83,24 @@ public class TouchKeyPad {
                     calcL = calcDistance(numbers[i], lastL);
                     calcR = calcDistance(numbers[i], lastR);
 
-                    System.out.println("index --- >  " + i);
-                    System.out.println("Target : >> " +numbers[i]);
-                    System.out.println("current position : >> " +lastL + " / " + lastR);
-                    System.out.println("calc distant >> " + calcL + " / " + calcR);
+                    System.out.println("\ncurrent index : >> " + i);
+                    System.out.println("target number : >> "+numbers[i]);
+                    System.out.println("last position L/R : >>" +lastL + " / " + lastR);
+                    System.out.println("calculated L/R : >> " + calcL + " / " + calcR);
 
                     if(calcL > calcR){ // 오른손이 가까운 경우
                         sb.append("R");
                         lastR = numbers[i];
-
-                        System.out.println("R");
                     } else if(calcL < calcR){ // 왼손이 가까운 경우
                         sb.append("L");
                         lastL = numbers[i];
-
-                        System.out.println("L");
                     } else { // 모두 동일한 경우
                         if(hand.equals("right")){
                             sb.append("R");
                             lastR = numbers[i];
-
-                            System.out.println("SR");
                         } else {
                             sb.append("L");
                             lastL = numbers[i];
-
-                            System.out.println("SL");
                         }
                     }
                     break;
@@ -127,17 +122,27 @@ public class TouchKeyPad {
     }
 
     // 서로다를때 동일하게 기준을 맞추고 시작하면 편리한 듯
-    private int calcDistance(int target, int position){
-        if (target == 0) target = 11;
-        if(position == 3 || position == 6 || position == 9){
-            position = position - 2;
+    private int calcDistance(int target, int position) {
+        int _target = target;
+        int _position = position;
+        
+        if (_target == 0) _target = 11;
+        if (_position == 0) _position = 11;
+        int distance = 0;
+
+        // 위치조정
+        if(_position == 3 || _position == 6 || _position == 9){
+            _position = _position - 2;
         }
 
-        if(position == 2 || position == 5 || position == 8 || position == 11){
-            position = position - 1;
+        int different = _target - _position;
+        if(different < 0 ){
+            different = Math.abs(different)+1;
         }
-        int distance = 0;
-        int different = Math.abs(target - position);
+        // 2, 5, 8, 0 위치조정
+        if(_position == 2 || _position == 5 || _position == 8 || _position == 11){
+            different = different - 2;
+        }
         if(different < 3){
             distance = 1;
         } else if(different < 6){

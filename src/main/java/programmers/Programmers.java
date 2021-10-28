@@ -1,19 +1,10 @@
 package programmers;
 
-import programmers.etc.LottaryScore;
-import programmers.etc.NumbersAndEnglishWords;
-import programmers.etc.RecommenNewID;
-import programmers.etc.TouchKeyPad;
-import programmers.exercise.hash.Camouflage;
-import programmers.exercise.hash.ListOfPhoneNumbers;
-import programmers.exercise.hash.UncompletedRace;
-import programmers.exercise.skilltest.CountingPrimeNumber;
-import programmers.exercise.skilltest.DistinctNumb;
-import programmers.exercise.skilltest.NoMoreMath;
-import programmers.exercise.sort.BiggestNumber;
-import programmers.exercise.sort.KNumber;
-import programmers.exercise.stackandque.Development;
-import programmers.exercise.stackandque.Printer;
+import programmers.codechallenge.CountDivisorAndSummary;
+import programmers.codechallenge.InnerProduct;
+import programmers.codechallenge.SumOfNoVisible;
+import programmers.codechallenge.TripleConversion;
+import programmers.exercise.completeexploration.MockExam;
 
 public class Programmers {
     public static void main(String[] args) {
@@ -69,7 +60,32 @@ public class Programmers {
         //NumbersAndEnglishWords numbersAndEnglishWords = new NumbersAndEnglishWords();
         //numbersAndEnglishWords.exec();
 
-        TouchKeyPad touchKeyPad = new TouchKeyPad();
-        touchKeyPad.exec();
+        // 최단거리 키패드 누르기
+        //TouchKeyPad touchKeyPad = new TouchKeyPad();
+        //touchKeyPad.exec();
+
+        // 숫자와 부호로 이루어진 배열로 전체 합을 구하라
+        //PlusMinus plusMinus = new PlusMinus();
+        //plusMinus.exec();
+
+        // 숫자배열중 존재하지 않는 수들의 합을 구하라. - 1점짜리.
+        // SumOfNoVisible sumOfNoVisible = new SumOfNoVisible();
+        // sumOfNoVisible.exec();
+
+        // 내적을 구하라 - 1점짜리.
+        //InnerProduct innerProduct = new InnerProduct();
+        //innerProduct.exec();
+
+        // 모의고사
+        //MockExam mockExam = new MockExam();
+        //mockExam.exec();
+
+        // 약수의 개수를 기준으로 구간 합을 구하여라
+        //CountDivisorAndSummary countDivisorAndSummary = new CountDivisorAndSummary();
+        //countDivisorAndSummary.exec();
+
+        // 입력된 정수는 3진법상에서 앞뒤를 뒤집은 후, 이를 다시 10진법으로 표현하시오.
+        TripleConversion tripleConversion = new TripleConversion();
+        tripleConversion.exec();
     }
 }
