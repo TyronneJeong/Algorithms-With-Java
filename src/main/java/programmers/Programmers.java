@@ -1,7 +1,9 @@
 package programmers;
 
 import programmers.etc.LottaryScore;
+import programmers.etc.NumbersAndEnglishWords;
 import programmers.etc.RecommenNewID;
+import programmers.etc.TouchKeyPad;
 import programmers.exercise.hash.Camouflage;
 import programmers.exercise.hash.ListOfPhoneNumbers;
 import programmers.exercise.hash.UncompletedRace;
@@ -59,7 +61,15 @@ public class Programmers {
         //LottaryScore lottaryScore = new LottaryScore();
         //lottaryScore.exec();
 
-        RecommenNewID recommenNewID = new RecommenNewID();
-        recommenNewID.exec();;
+        // 허용가능한 ID 로 치환
+        //RecommenNewID recommenNewID = new RecommenNewID();
+        //recommenNewID.exec();;
+
+        // 영문표기를 읽어 숫자로 변환하기
+        //NumbersAndEnglishWords numbersAndEnglishWords = new NumbersAndEnglishWords();
+        //numbersAndEnglishWords.exec();
+
+        TouchKeyPad touchKeyPad = new TouchKeyPad();
+        touchKeyPad.exec();
     }
 }
