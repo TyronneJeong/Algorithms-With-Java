@@ -1,4 +1,4 @@
-package programmers.etc2;
+package programmers.level102;
 
 import java.util.ArrayList;
 import java.util.Arrays;

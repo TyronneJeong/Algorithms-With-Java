@@ -52,6 +52,7 @@ public class SecretMap {
             System.out.println(e);
         });
     }
+
     public String[] solution(int n, int[] arr1, int[] arr2) {
         String[] answer = new String[n];
         StringBuffer sb = new StringBuffer(n);
@@ -61,11 +62,6 @@ public class SecretMap {
             sb  = new StringBuffer(n);
             charArr1 = String.format("%"+n+"s", Integer.toBinaryString(arr1[i])).replace(" ", "0").toCharArray();
             charArr2 = String.format("%"+n+"s", Integer.toBinaryString(arr2[i])).replace(" ", "0").toCharArray();
-
-            System.out.println("#### Section ### " + i);
-            System.out.println("##"+String.valueOf(charArr1));
-            System.out.println("##"+String.valueOf(charArr2));
-
             for (int j = 0; j < charArr1.length; j++) {
                 if(charArr1[j] == '0' && charArr2[j] == '0'){
                     sb.append(' ');
@@ -74,7 +70,6 @@ public class SecretMap {
                 }
             }
             answer[i] = sb.toString();
-            System.out.println("### result : >> "+answer[i].toString());
         }
         return answer;
     }

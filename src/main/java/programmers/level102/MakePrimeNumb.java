@@ -1,7 +1,4 @@
-package programmers.etc2;
-
-import java.util.ArrayList;
-import java.util.HashSet;
+package programmers.level102;
 
 /**
  * [문제설명]

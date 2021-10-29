@@ -1,4 +1,4 @@
-package programmers.etc;
+package programmers.level101;
 
 /**
  * [문제설명]

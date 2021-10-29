@@ -1,16 +1,16 @@
 package programmers;
 
-import programmers.codechallenge.*;
-import programmers.etc.*;
-import programmers.etc2.*;
-import programmers.exercise.completeexploration.MockExam;
-import programmers.exercise.greedyalgorithm.TrainingSuite;
-import programmers.kakao.DartGame;
 import programmers.kakao.FailureRate;
-import programmers.kakao.SecretMap;
+import programmers.naverfinancial.Sample;
 
 public class Programmers {
     public static void main(String[] args) {
+        // N개의 최소 공배수
+        Sample sample = new Sample();
+        sample.exec();
+    }
+
+    private static void level102(){
         // 수박수
         //Subaksu subaksu = new Subaksu();
         //subaksu.exec();
@@ -68,11 +68,23 @@ public class Programmers {
         //minimumRectangle.exec();
 
         // 비밀지도
-        SecretMap secretMap = new SecretMap();
-        secretMap.exec();
+        // SecretMap secretMap = new SecretMap();
+        // secretMap.exec();
+
+        // 최소공약수 최대공배수를 구하라
+        //CommonMultiple commonMultiple = new CommonMultiple();
+        //commonMultiple.exec();
+
+        // 크레인 문제
+        //Crane crane = new Crane();
+        //crane.exec();
+
+        // 잡다한 파일
+        //Exercise exercise = new Exercise();
+        //exercise.exec();
     }
 
-    private static void season01(){
+    private static void level101(){
         // 끝내지못한 경주
         //UncompletedRace uncompletedRace = new UncompletedRace();
         //uncompletedRace.exec();
