@@ -1,4 +1,4 @@
-package programmers.etc;
+package programmers.kakao;
 
 /**
  * [문제설명]
