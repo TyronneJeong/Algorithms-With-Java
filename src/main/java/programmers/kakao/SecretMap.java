@@ -1,5 +1,7 @@
 package programmers.kakao;
 
+import java.util.Arrays;
+
 /**
  * [문제 설명]
  * 비밀지도
@@ -46,21 +48,34 @@ public class SecretMap {
         int n = 5;
         int[] arr1 = {9, 20, 28, 18, 11};
         int[] arr2 = {30, 1, 21, 17, 28};
-        solution(n, arr1, arr2);
+        Arrays.stream(solution(n, arr1, arr2)).forEach(e->{
+            System.out.println(e);
+        });
     }
     public String[] solution(int n, int[] arr1, int[] arr2) {
-        String[] answer = {};
+        String[] answer = new String[n];
+        StringBuffer sb = new StringBuffer(n);
+        char[] charArr1 = new char[n];
+        char[] charArr2 = new char[n];
+        for (int i = 0; i < arr1.length; i++) {
+            sb  = new StringBuffer(n);
+            charArr1 = String.format("%"+n+"s", Integer.toBinaryString(arr1[i])).replace(" ", "0").toCharArray();
+            charArr2 = String.format("%"+n+"s", Integer.toBinaryString(arr2[i])).replace(" ", "0").toCharArray();
 
-        // char[][] 에서 char[] 줄 단위로 toString 이 되는가?
-        char[][] charArr = new char[n][n];
-        charArr[0][0] = 'A';
-        charArr[0][1] = 'B';
-        charArr[0][2] = 'C';
-        charArr[0][3] = 'D';
-        charArr[0][4] = 'E';
+            System.out.println("#### Section ### " + i);
+            System.out.println("##"+String.valueOf(charArr1));
+            System.out.println("##"+String.valueOf(charArr2));
 
-        System.out.println(String.valueOf(charArr[0]));
+            for (int j = 0; j < charArr1.length; j++) {
+                if(charArr1[j] == '0' && charArr2[j] == '0'){
+                    sb.append(' ');
+                } else {
+                    sb.append('#');
+                }
+            }
+            answer[i] = sb.toString();
+            System.out.println("### result : >> "+answer[i].toString());
+        }
         return answer;
     }
-
 }
