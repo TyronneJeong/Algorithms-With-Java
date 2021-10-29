@@ -6,6 +6,8 @@ import programmers.etc2.*;
 import programmers.exercise.completeexploration.MockExam;
 import programmers.exercise.greedyalgorithm.TrainingSuite;
 import programmers.kakao.DartGame;
+import programmers.kakao.FailureRate;
+import programmers.kakao.SecretMap;
 
 public class Programmers {
     public static void main(String[] args) {
@@ -53,12 +55,24 @@ public class Programmers {
         //DistinctSameNumber distinctSameNumber = new DistinctSameNumber();
         //distinctSameNumber.exec();
 
-        // 다트게임
-        DartGame dartGame = new DartGame();
-        dartGame.exec();
+        // 다트게임 (입력된 문자열의 특징을 분석하여 스코어를 계산하라)
+        //DartGame dartGame = new DartGame();
+        //dartGame.exec();
+
+        // 부족한 금액 계산하기
+        //InsufficientAmount insufficientAmount = new InsufficientAmount();
+        //insufficientAmount.exec();
+
+        // 최소직사각형 - 가로 세로 길이가 제각각일때 모두 수렴 가능한 최소직사각형을 구하라
+        //MinimumRectangle minimumRectangle = new MinimumRectangle();
+        //minimumRectangle.exec();
+
+        // 비밀지도
+        SecretMap secretMap = new SecretMap();
+        secretMap.exec();
     }
 
-    private void season01(){
+    private static void season01(){
         // 끝내지못한 경주
         //UncompletedRace uncompletedRace = new UncompletedRace();
         //uncompletedRace.exec();
@@ -156,8 +170,8 @@ public class Programmers {
         //trainingSuite.exec();
 
         // 게임의 참여자가 계류중인 스테이지 별 실패율을 계산하고 그 스테이지를 내림차순으로 정렬하라.
-        // FailureRate failureRate = new FailureRate();
-        // failureRate.exec();
+        FailureRate failureRate = new FailureRate();
+        failureRate.exec();
 
         // 주어진 포키몬 카드로 구성가능한 최대 카드 수 산출
         //Pokemon pokemon = new Pokemon();

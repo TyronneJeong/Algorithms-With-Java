@@ -1,4 +1,4 @@
-package programmers.etc;
+package programmers.kakao;
 
 import java.util.*;
 
@@ -57,7 +57,8 @@ import java.util.*;
 public class FailureRate {
     public void exec(){
         int N = 5; // 스테이지갯수
-        int[] stages = {2, 1, 2, 6, 2, 4, 3, 3}; // 참여자들의 마지막 스테이지
+//        int[] stages = {2, 1, 2, 6, 2, 4, 3, 3}; // 참여자들의 마지막 스테이지
+        int[] stages = {4, 4, 4, 4, 4}; // 참여자들의 마지막 스테이지
 
 
         Arrays.stream(solution(N, stages)).forEach(e->{
