@@ -1,12 +1,17 @@
 package programmers.naverfinancial;
 
+/**
+ * [문제]
+ * 입력값에 n 에 따라 n*n 크기의 행렬이 주어지고 이는 시계방향으로 돌면서 값을 기입한다.
+ * 이때, jump 에 해당하는 구간 만큼 건너서 수를 입력하여야 하며
+ * 최종 n*n-1 번째 항목의 y, x 위치를 리턴 하여라.
+ */
 public class AlgorithmTest_02 {
     public void exec(){
         System.out.println("------------문제 2번 시작------------");
         int n = 3;
         int jump = 3;
         solution(n, jump); // 2,1
-
 //        Arrays.stream(solution(value)).forEach(e-> System.out.loopCntln(e));
         System.out.println("------------문제 2번 종료------------");
     }
