@@ -1,4 +1,4 @@
-package programmers.assignment.exercise;
+package programmers.assignment.exercise.tcp;
 
 import javax.sound.sampled.Port;
 import java.io.*;
@@ -17,6 +17,10 @@ public class TCPServer {
      */
     private static final int PORT = 6077;
 
+    /**
+     * main 함수
+     * @param args
+     */
     public static void main(String[] args) {
         // 서버 소켓 - 열때 포트 번호가 필요하다.
         ServerSocket serverSocket = null;
@@ -32,7 +36,7 @@ public class TCPServer {
         PrintWriter printWriter = null;
 
         // 스캐너
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         try {
             // 1. 서버 소켓 생성
@@ -53,7 +57,7 @@ public class TCPServer {
             System.out.println("[server] connected by client");
             System.out.println("[server] connect with " + inetSocketAddress.getHostString() + " " + socket.getPort());
 
-
+            // 지속적인 서비스
             while(true){
                 // input stream 을 열고 이를 streamReader 와 bufferedReader 로 랩핑 한다.
                 inputStream = socket.getInputStream();
@@ -87,7 +91,7 @@ public class TCPServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sc.close();
+            scanner.close();
         }
     }
 }
