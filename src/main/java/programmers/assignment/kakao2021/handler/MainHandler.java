@@ -63,6 +63,9 @@ public class MainHandler implements HttpHandler {
             String methodParameter = "Hi!!";
             String returnValue = (String) myMethod.invoke(whatInstance, new Object[] {methodParameter});
 
+//            String returnValue = (String) myMethod.invoke(whatInstance,
+//                    new Object[] { methodParameter1, methodParameter2, methodParameter3 });
+
             System.out.println("#### RETURN ####");
             System.out.println(returnValue);
         } catch (ClassNotFoundException e) {
