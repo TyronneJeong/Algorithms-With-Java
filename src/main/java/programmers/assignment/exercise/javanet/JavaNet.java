@@ -5,7 +5,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -113,17 +114,8 @@ public class JavaNet {
          */
         private final String DEFAULT_HOSTNAME = "localhost";
         private final int PORT = 3000;
-
-        /**
-         * Back Log : 완료해야할 작업의 모음.
-         * TCPConnection 에서 Back Log 란 ? 대기중인 커넥션의 수
-         */
-        private final int BACK_LOG = 0;
-
-        /**
-         * HttpServer 객체 선언
-         */
-        private HttpServer server = null;
+        private final int BACK_LOG = 0; // Back Log : 완료해야할 작업의 모음. / TCPConnection 에서 Back Log 란 ? 대기중인 커넥션의 수
+        private HttpServer server = null; // HttpServer 객체 선언
 
         /**
          * Constuctor 생성자 선언
@@ -132,21 +124,17 @@ public class JavaNet {
             InetSocketAddress inetSocketAddress = new InetSocketAddress(DEFAULT_HOSTNAME, PORT);  // 서버 주소 객체 생성
             server = HttpServer.create(inetSocketAddress, BACK_LOG);  // 서버 생성
 
-            /* Path Allocation */
-            server.createContext("/", new RootHandler());  // Handler 가 여기에서 생성되는 구나.
-            // 그럼 혹시 복수개도 가능 한지??
-            // TODO 있다 /apple /movie /vedio 등으로 테스트 해보기
-        }
+            /* Path delegate */
+            server.createContext("/", new RootHandler());
+            server.createContext("/sample", new SampleHandler());
+            server.createContext("/car", new CarHandler());
 
-        /**
-         * Server Start
-         */
-        private void startServer(){
-            server.start();
+            // Runtime 객체 - 현재 실행중인 환경을 객체화한 객체
+            // 모든 자바 프로그램에 shutdown hook 을 달아 줄 수 있다.
+            // 프로그램이 종료되는 시점에 호출되는 명령을 정의한다.
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-                @Override                                                   
+                @Override
                 public void run() {
-                    // 종료 로그
                     System.out.println(
                             String.format(
                                     "[%s][HTTP SERVER][STOP]",
@@ -158,42 +146,57 @@ public class JavaNet {
         }
 
         /**
-         * Server Stop
+         * 서버시작
+         */
+        private void startServer(){
+            server.start();
+        }
+
+        /**
+         * 서버종료
+         * @param delay
          */
         private void stopServer(int delay){
             server.stop(delay);
         }
 
-        /*************************************************************
-         * HTTP Handler Class
-         * - HTTP 를 이용한 request&response 가 모두 여기에서 핸들링 된다.
-         *************************************************************/
+        /**
+         * 컨텍스트 핸들러
+         */
+        class SampleHandler implements HttpHandler {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                Headers header = exchange.getRequestHeaders();
+                OutputStream os = exchange.getResponseBody();
+
+                // request header 출력
+                for (String item:header.keySet()) {
+                    System.out.println(item + " : " + header.get(item));
+                }
+
+                // response body
+                String str = "안녕하세요 샘플 페이지 입니다. 방갑읍니다.";
+
+                ByteBuffer bb = Charset.forName("UTF-8").encode(str);
+                int contentLength = bb.limit();
+                byte[] content = new byte[contentLength];
+                bb.get(content, 0, contentLength);
+
+                // Set Response Headers
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "text/html;charset=UTF-8");
+                headers.add("Content-Length", String.valueOf(contentLength));
+                exchange.sendResponseHeaders(200, contentLength);
+
+                os.write(content);
+                os.close();
+            }
+        }
+
+        // 메인 컨텍스트
         class RootHandler implements HttpHandler {
             @Override
             public void handle(HttpExchange exchange) throws IOException {
-                Headers reqHeaders = exchange.getResponseHeaders();
-                Headers resHeaders = exchange.getRequestHeaders();
-
-                // request header 출력
-                System.out.println("header 시작");
-                for (String item:resHeaders.keySet()) {
-                    System.out.println(item + " : " + resHeaders.get(item));
-                }
-                System.out.println("header 종료");
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
-
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println("body 시작"+br.readLine());
-                // request body 출력
-                String text = "";
-                while( (text = br.readLine()) != null){
-                    System.out.println(text);
-                }
-                System.out.println("body 종료");
-
                 OutputStream os = exchange.getResponseBody();
 
                 // Write Response Body
@@ -230,7 +233,29 @@ public class JavaNet {
                 // outputstream
                 os.write(content);
                 os.close();
-                br.close();
+            }
+        }
+
+        // 자동차 컨텍스트 핸들러
+        class CarHandler implements HttpHandler {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                OutputStream os = exchange.getResponseBody();
+                String str = "안녕하세요 자동차 페이지 입니다. 방갑읍니다.";
+
+                ByteBuffer bb = Charset.forName("UTF-8").encode(str);
+                int contentLength = bb.limit();
+                byte[] content = new byte[contentLength];
+                bb.get(content, 0, contentLength);
+
+                // Set Response Headers
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "text/html;charset=UTF-8");
+                headers.add("Content-Length", String.valueOf(contentLength));
+                exchange.sendResponseHeaders(200, contentLength);
+
+                os.write(content);
+                os.close();
             }
         }
     }

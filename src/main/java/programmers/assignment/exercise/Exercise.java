@@ -5,10 +5,13 @@ import programmers.assignment.exercise.javanet.JavaNet;
 
 public class Exercise {
     public static void main(String[] args) {
+        // 자바 서버 소켓
         JavaNet javaNet = new JavaNet();
-//        javaNet.exec();
+        javaNet.exec();
+        
+        // 입출력 스트림
         InOutStream inOutStream = new InOutStream();
-        inOutStream.exec();
+        // inOutStream.exec();
     }
 
 

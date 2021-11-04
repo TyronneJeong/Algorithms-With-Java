@@ -16,6 +16,7 @@ public class InOutStream {
     private InputStream is = null;
     private InputStreamReader isr = null;
     private BufferedReader br = null;
+    private BufferedWriter bw = null;
 
     public void exec() {
         /**
@@ -85,7 +86,9 @@ public class InOutStream {
          * 4. 문자열을 직접 바이트 스트림으로 변환 후 재생성 예제.
          */
         System.out.println("\n\nExample");
-        String sample = "Hello!! World!!\nSample word is complete";
+        String sample = "Hello!! World!!";
+        
+        // byte stream 생성
         ByteArrayInputStream bais = new ByteArrayInputStream(sample.getBytes(StandardCharsets.UTF_8)); // byte stream 생성
 
         br = new BufferedReader(new InputStreamReader(bais));
@@ -94,6 +97,37 @@ public class InOutStream {
             while((printStr = br.readLine()) != null){
                 System.out.println(printStr);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * BufferedWriter
+         * - StringBuffer 의 상위 클래스 인듯? 아니네. StringBuffer 는 StringBuilder 의 상속 객체
+         * - StringBuffer , StringBuilder 모두 Serializable 을 지원 한다. 하지만 synchronized 는 StringBuffer 만 지원한다.
+         * - StringBuilder 가 StringBuffer 에 비해 조금 더 빠르다.
+         */
+        System.out.println("\n\nBuffered Writer");
+        try {
+            StringBuffer tsb;
+            StringBuilder tsbb;
+            bw = new BufferedWriter(new OutputStreamWriter(System.out));
+            bw.write(sample);
+            bw.newLine();
+            bw.write("아직 작성중");
+            bw.flush(); // 출력
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 열려진 Stream 은 모두 닫아 주어야 한다.
+         */
+        try {
+            is.close();
+            isr.close();
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
