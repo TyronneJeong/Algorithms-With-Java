@@ -1,14 +1,5 @@
 package programmers.assignment.kakao2021.controller;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-
 /**
  * 네이밍 분류기준
  * - Controller : 외부와 커뮤니케이션이 있을때, 데이터 뿐만 아니라 view 와 vc 를 갖고 있을 수도 있다.
@@ -20,7 +11,17 @@ class SampleController {
         System.out.println("Hi");
     }
 
-    public void exec(String arg){
+    public void doGet(String arg){
         System.out.println("실행됨" + arg);
     }
+
+    public void doPost(String arg){
+        System.out.println("실행됨" + arg);
+    }
+
+    // URI 에 따라 컨트롤러를 분리시켜 줄 수 있을 것 같다.
+//        System.out.println(exchange.getRequestMethod());
+//        System.out.println(exchange.getRequestURI());
+//        System.out.println(exchange.getRequestURI().getPath());
+//        System.out.println(exchange.getRequestURI().getQuery());
 }
