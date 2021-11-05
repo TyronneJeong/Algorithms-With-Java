@@ -19,7 +19,7 @@ public class ServerProgram {
             kakaoServer = new KakaoServer();
             kakaoServer.startServer();
 
-            System.out.print("Please press 'Enter' to stop the server.");
+            System.out.println("Please press 'Enter' to stop the server.");
             System.in.read();
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import programmers.assignment.kakao2021.constants.ServerConst;
+import programmers.assignment.kakao2021.controller.MainController;
 import programmers.assignment.kakao2021.utils.JSONUtils;
 
 import java.io.*;
@@ -43,67 +44,87 @@ public class MainHandler implements HttpHandler {
         OutputStream os = exchange.getResponseBody();
         byte[] content;
 
-        String errMsg = validateInputdMsg(exchange);
+        int errCode = validateMsg(exchange);
+        String direction = exchange.getRequestURI().getPath().replace("/", "");
 
         // 정상인 경우에만 진입
-        if(errMsg.isEmpty()){
+        if(errCode == 0){
             BufferedReader br = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
-            StringBuffer sb = new StringBuffer();
-            while(br.ready()){
-                sb.append(br.readLine());
-            }
-
-            String contentType = (String) reqHeaders.get("Content-type").get(0);
-            String xAuthToken = (String) reqHeaders.get("X-Auth-Token").get(0);
-
-            String strContextPath = exchange.getRequestURI().
-                    getPath().replace(ServerConst.DEFAULT.ROOT, "");
-
-            if(strContextPath.isEmpty()){
-                strContextPath = ServerConst.DEFAULT.MAIN;
-            }
-
             try {
-                /* Class Load */
-                Class<?> myClass = loader.loadClass(String.format(ServerConst.CONTROLLER_ADDR.PREFIX
-                        +"%s"+ServerConst.CONTROLLER_ADDR.POSTFIX, strContextPath));
-
-                /* getConstructor */
-                Constructor<?> constructor = myClass.getDeclaredConstructor();
-                constructor.setAccessible(true);
-
-                /* getInstance */
-                Object instance = constructor.newInstance();
-                Method m = myClass.getDeclaredMethod(ServerConst.DEFAULT_METHOD.DO_PROCESS, HashMap.class);
-                m.setAccessible(true);
-
-                /* application/json */
-                if(contentType.equals(ServerConst.CONTENT_TYPE.JSON)){
-                    content = makeStrToByteArr(
-                            JSONUtils.mapToJSONString(
-                                    (HashMap<String, Object>) m.invoke(instance, JSONUtils.jsonToMap(sb.toString()))
-                            )
-                    );
-                } else {
-                    // m.invoke(instance, new Object[] {inputMap}); // String 을 리턴 한다는 가정 FIXME
-                    content = makeStrToByteArr("어서오세요~");
+                StringBuffer sb = new StringBuffer();
+                while(br.ready()){
+                    sb.append(br.readLine());
                 }
-                // Set Response Headers
+
+                String contentType = (String) reqHeaders.get("Content-type").get(0);
+                String xAuthToken = (String) reqHeaders.get("X-Auth-Token").get(0);
+                String strContextPath = exchange.getRequestURI().
+                        getPath().replace(ServerConst.DEFAULT.ROOT, "");
+
+                /* default context */
+                if(strContextPath.isEmpty()){
+                    strContextPath = ServerConst.DEFAULT.MAIN;
+                }
+
+                /*************************************<Class Loader>*************************************/
+//                /* class load */
+//                Class<?> myClass = loader.loadClass(String.format(ServerConst.CONTROLLER_ADDR.PREFIX
+//                        +"%s"+ServerConst.CONTROLLER_ADDR.POSTFIX, strContextPath));
+//
+//                /* getConstructor */
+//                Constructor<?> constructor = myClass.getDeclaredConstructor();
+//                constructor.setAccessible(true);
+//
+//                /* getInstance */
+//                Object instance = constructor.newInstance();
+//                Method m = myClass.getDeclaredMethod(ServerConst.DEFAULT_METHOD.DO_PROCESS, HashMap.class);
+//                m.setAccessible(true);
+//
+//                /* application/json */
+//                content = makeStrToByteArr(
+//                        JSONUtils.mapToJSONString(
+//                                (HashMap<String, Object>) m.invoke(instance, JSONUtils.jsonToMap(sb.toString()))
+//                        )
+//                );
+                /*************************************<Class Loader>*************************************/
+                MainController mainController = MainController.getInstance();
+                content = makeStrToByteArr(
+                        JSONUtils.mapToJSONString(
+                                (HashMap<String, Object>) mainController.doProcess(JSONUtils.jsonToMap(sb.toString()), direction)
+                        )
+                );
+
+                /* Set Response Headers */
                 resHeaders.add("Content-Type", "text/html;charset=UTF-8");
                 resHeaders.add("Content-Length", String.valueOf(content.length));
-
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, content.length);
                 os.write(content);
             } catch (Exception e) {
                 e.printStackTrace();
-                // 오류처리 작업 필요
+                errCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
             } finally {
                 br.close();
                 os.close();
             }
-        } else {
-            content = makeStrToByteArr("무지성 패킷 헤더로 인해 오류가 발생 했어요");
+        }
 
+        if(errCode > 0) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("다음과 같은 오류가 발생 하였어요.</br>" + errCode +"Error</br>");
+            switch(errCode){
+                case 400: // Bad Request
+                    sb.append("잘못된 요청 값이 존재하네요.</br>");
+                    break;
+                case 401: // Unauthorized
+                    sb.append("인증 정보가 제대로 되어 있지 않아요.</br>");
+                    break;
+                case 500: // Internal Server Error
+                    sb.append("알수 없는 서버 오류가 발생 했네요?</br>");
+                    break;
+                default:
+                    break;
+            }
+            content = makeStrToByteArr(sb.toString());
             resHeaders.add("Content-Type", "text/html;charset=UTF-8");
             resHeaders.add("Content-Length", String.valueOf(content.length));
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, content.length);
@@ -112,20 +133,34 @@ public class MainHandler implements HttpHandler {
         }
     }
 
-    private String validateInputdMsg(HttpExchange exchange) {
+    /**
+     * validateMsg
+     * 입력전문의 유효성을 검증한다.
+     * @param exchange
+     * @return
+     */
+    private int validateMsg(HttpExchange exchange) {
         // favicon 예외처리
         if(exchange.getRequestURI().getPath().equals("/favicon.ico")) {
-            return "500";
+            return -1;
         }
-
+        // Content-Type 누락
         if(exchange.getRequestHeaders().get("Content-type") == null){
-            return "500";
+            return HttpURLConnection.HTTP_BAD_REQUEST;
+        } else {
+            if(!exchange.getRequestHeaders().get("Content-type").get(0).equals(ServerConst.CONTENT_TYPE.JSON)){
+                return HttpURLConnection.HTTP_BAD_REQUEST;
+            }
         }
-
+        // 인증정보 누락
         if(exchange.getRequestHeaders().get("X-Auth-Token") == null){
-            return "500";
+            return HttpURLConnection.HTTP_UNAUTHORIZED;
+        } else {
+            if(!exchange.getRequestHeaders().get("X-Auth-Token").get(0).equals(ServerConst.AUTH_TOKEN.KEY)){
+                return HttpURLConnection.HTTP_UNAUTHORIZED;
+            }
         }
-        return "";
+        return 0;
     }
 
     /**

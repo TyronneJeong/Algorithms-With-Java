@@ -29,6 +29,13 @@ public final class ServerConst {
     }
 
     /**
+     * Autholization Token
+     */
+    public final class AUTH_TOKEN {
+        public static final String KEY = "f5612e21a9ae3c40fa0b6e6cd9b9e6d3";
+    }
+
+    /**
      * Controller Const
      */
     public final class CONTROLLER_ADDR {
