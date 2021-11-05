@@ -7,6 +7,9 @@ public final class ServerConst {
     public final class DEFAULT {
         public static final String ROOT = "/";
         public static final String MAIN = "Main";
+
+        public static final String EMPTY_STRING = "";
+
         public static final String GET = "GET";
         public static final String POST = "POST";
     }

@@ -3,21 +3,16 @@ package programmers.assignment.kakao2021.handler;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import netscape.javascript.JSObject;
 import programmers.assignment.kakao2021.constants.ServerConst;
+import programmers.assignment.kakao2021.utils.JSONUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
 
 /**
  * 네이밍 분류기준
@@ -45,174 +40,102 @@ public class MainHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Headers reqHeaders = exchange.getRequestHeaders();
         Headers resHeaders = exchange.getResponseHeaders();
-        InputStream is = exchange.getRequestBody();
         OutputStream os = exchange.getResponseBody();
+        byte[] content;
 
-        String reqMethod = exchange.getRequestMethod();
-        String strPath;
-        HashMap<String, Object> inputMap = null;
-        HashMap<String, Object> outputMap = null;
+        String errMsg = validateInputdMsg(exchange);
 
-        // content type
+        // 정상인 경우에만 진입
+        if(errMsg.isEmpty()){
+            BufferedReader br = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
+            StringBuffer sb = new StringBuffer();
+            while(br.ready()){
+                sb.append(br.readLine());
+            }
 
-        Method m;
-        Object instance;
-        try {
-            strPath = exchange.getRequestURI().getPath().replace(ServerConst.DEFAULT.ROOT, "");
-            if(strPath.isEmpty()) strPath = ServerConst.DEFAULT.MAIN;
+            String contentType = (String) reqHeaders.get("Content-type").get(0);
+            String xAuthToken = (String) reqHeaders.get("X-Auth-Token").get(0);
 
-            // favicon 예외처리
-            if(strPath.equals("favicon.ico")) {
+            String strContextPath = exchange.getRequestURI().
+                    getPath().replace(ServerConst.DEFAULT.ROOT, "");
+
+            if(strContextPath.isEmpty()){
+                strContextPath = ServerConst.DEFAULT.MAIN;
+            }
+
+            try {
+                /* Class Load */
+                Class<?> myClass = loader.loadClass(String.format(ServerConst.CONTROLLER_ADDR.PREFIX
+                        +"%s"+ServerConst.CONTROLLER_ADDR.POSTFIX, strContextPath));
+
+                /* getConstructor */
+                Constructor<?> constructor = myClass.getDeclaredConstructor();
+                constructor.setAccessible(true);
+
+                /* getInstance */
+                Object instance = constructor.newInstance();
+                Method m = myClass.getDeclaredMethod(ServerConst.DEFAULT_METHOD.DO_PROCESS, HashMap.class);
+                m.setAccessible(true);
+
+                /* application/json */
+                if(contentType.equals(ServerConst.CONTENT_TYPE.JSON)){
+                    content = makeStrToByteArr(
+                            JSONUtils.mapToJSONString(
+                                    (HashMap<String, Object>) m.invoke(instance, JSONUtils.jsonToMap(sb.toString()))
+                            )
+                    );
+                } else {
+                    // m.invoke(instance, new Object[] {inputMap}); // String 을 리턴 한다는 가정 FIXME
+                    content = makeStrToByteArr("어서오세요~");
+                }
+                // Set Response Headers
+                resHeaders.add("Content-Type", "text/html;charset=UTF-8");
+                resHeaders.add("Content-Length", String.valueOf(content.length));
+
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, content.length);
+                os.write(content);
+            } catch (Exception e) {
+                e.printStackTrace();
+                // 오류처리 작업 필요
+            } finally {
+                br.close();
                 os.close();
-                return;
             }
+        } else {
+            content = makeStrToByteArr("무지성 패킷 헤더로 인해 오류가 발생 했어요");
 
-            // [Http header - Accept]
-            // Content negotiation
-            // 사용자가 수용가능한 컨텐츠의 종류를 전달 받으면 그에 대응되는 컨텐츠를 리턴한다.
-            // 서버는 해당 요청에 응할 경우 200을 리턴
-            // 300 - 다중 선택 가능
-            // 406 - 수용가능 옵션이 없음
-            // 415 - 지원가능한 미디어 유형이 아님
-            // 등으로 응답할 수 있다.
+            resHeaders.add("Content-Type", "text/html;charset=UTF-8");
+            resHeaders.add("Content-Length", String.valueOf(content.length));
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, content.length);
+            os.write(content);
+            os.close();
+        }
+    }
 
-            String contentType = "";
-            String xAuthToken = "";
-            // K, V 헤더정보
-            for (Map.Entry<String, List<String>> item: reqHeaders.entrySet()) {
-                System.out.println(item.getKey());
-                // [Http header - Accept]
-                if(item.getKey().equalsIgnoreCase("Accept")){
-                    System.out.println(item.getValue().toString().startsWith(""));
-                }
-
-                // Content-Type Catch
-                if(item.getKey().equalsIgnoreCase("Content-type")){
-                    contentType = item.getValue().get(0);
-                    System.out.println("Set Content-Type : " + contentType);
-                }
-
-                // Content-Type Catch
-                if(item.getKey().equalsIgnoreCase("X-Auth-Token")){
-                    contentType = item.getValue().get(0);
-                    System.out.println("Set Content-Type : " + contentType);
-                }
-            }
-
-            xAuthToken = reqHeaders.get("X-Auth-Token").get(0);
-            System.out.println("xAuthToken >> "+xAuthToken);
-
-
-
-            // TODO 컨텐츠 타입이 정의되는 곳이 Accept 인지
-            // Contetn-Type 이라는 바디항목이 따로 있는건지 확인이 필요함.
-            // 이걸 하려면 클라이언트 프로그램 작성이 필요함.
-
-            System.out.println("Class Load : >> " + String.format(ServerConst.CONTROLLER_ADDR.PREFIX
-                    +"%s"+ServerConst.CONTROLLER_ADDR.POSTFIX, strPath));
-
-            /* Class Load */
-            Class<?> myClass = loader.loadClass(String.format(ServerConst.CONTROLLER_ADDR.PREFIX
-                    +"%s"+ServerConst.CONTROLLER_ADDR.POSTFIX, strPath));
-
-            /* getConstructor */
-            Constructor<?> constructor = myClass.getDeclaredConstructor();
-            constructor.setAccessible(true);
-
-            /* getInstance */
-            instance = constructor.newInstance();
-
-            /* GET/POST */
-            if(contentType.equals(ServerConst.CONTENT_TYPE.JSON)){
-                // JSON TO MAP
-                inputMap = new HashMap();
-                inputMap.put("data", "sampledata");
-            } else {
-                inputMap = new HashMap();
-                inputMap.put("data", "sampledata");
-            }
-            m = myClass.getDeclaredMethod(ServerConst.DEFAULT_METHOD.DO_PROCESS, new Class[]{HashMap.class});
-            m.setAccessible(true);
-            outputMap = (HashMap) m.invoke(instance, new Object[] {inputMap});
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+    private String validateInputdMsg(HttpExchange exchange) {
+        // favicon 예외처리
+        if(exchange.getRequestURI().getPath().equals("/favicon.ico")) {
+            return "500";
         }
 
-        /* make transaction data */
-        byte[] content = this.makeTranData(outputMap);
+        if(exchange.getRequestHeaders().get("Content-type") == null){
+            return "500";
+        }
 
-        // parsing 시작
-        System.out.println("JSON Parsing Start");
-        byte[] content2 = makeTranDataToJSON(outputMap);
-        System.out.println("JSON Parsing End");
-
-        // Set Response Headers
-        resHeaders.add("Content-Type", "text/html;charset=UTF-8");
-        resHeaders.add("Content-Length", String.valueOf(content.length));
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, content.length);
-
-        os.write(content);
-        os.close();
+        if(exchange.getRequestHeaders().get("X-Auth-Token") == null){
+            return "500";
+        }
+        return "";
     }
 
     /**
-     * makeTranData
+     * makeStrToByteArr
      * @param param
      * @return
      * @throws IOException
      */
-    private byte[] makeTranData(HashMap param) throws IOException {
-        String str = "샘플 텍스트 입니다.";
-
-        // JSON format 으로도 하나 만들어야 할 듯.
-        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(str);
-        int contentLength = byteBuffer.limit();
-        byte[] content = new byte[contentLength];
-        byteBuffer.get(content, 0, contentLength);
-        return content;
-    }
-
-    /**
-     * makeTranDataToJSON
-     * @param param
-     * @return
-     * @throws IOException
-     */
-    private byte[] makeTranDataToJSON(HashMap param) throws IOException {
-        if(param == null) return new byte[]{};
-        String rtnStr = null;
-        try {
-            URL url = new URL("https://repo1.maven.org/maven2/org/json/json/20210307/json-20210307.jar");
-            final URLClassLoader ucl = new URLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
-            final Class<?> cls = ucl.loadClass("org.json.JSONObject");
-
-            Constructor<?> constructor = cls.getConstructor(Map.class);
-            constructor.setAccessible(true);
-            Object instance = constructor.newInstance(param);
-
-            Method m;
-            m = cls.getDeclaredMethod("toString");
-            m.setAccessible(true);
-            rtnStr = (String) m.invoke(instance);
-
-            System.out.println(rtnStr);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(rtnStr);
+    private byte[] makeStrToByteArr(String param) throws IOException {
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(param);
         int contentLength = byteBuffer.limit();
         byte[] content = new byte[contentLength];
         byteBuffer.get(content, 0, contentLength);

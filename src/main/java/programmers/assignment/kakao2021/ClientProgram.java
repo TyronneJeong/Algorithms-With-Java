@@ -1,5 +1,7 @@
 package programmers.assignment.kakao2021;
 
+import programmers.assignment.kakao2021.constants.ServerConst;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -10,15 +12,13 @@ import java.net.URL;
  */
 public class ClientProgram {
     private static HttpURLConnection conn;
+    // 호출 메소드 유형은 GET, POST, PUT, DELETE 모두 가능 하다고 한다.
 
     public static void main(String[] args) {
         try {
             URL url = new URL("http://localhost:7777/");
             conn = (HttpURLConnection) url.openConnection();
-
-            // 호출 메소드 유형은 GET, POST, PUT, DELETE 모두 가능 하다고 한다.
-            String type = "POST";
-            conn.setRequestMethod(type);
+            conn.setRequestMethod(ServerConst.DEFAULT.POST);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Transfer-Encoding", "chunked");
             conn.setRequestProperty("Connection", "keep-alive");
@@ -26,20 +26,25 @@ public class ClientProgram {
             conn.setDoOutput(true);
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            bw.write("{sampledata:{'1', 'item'}}");
+            StringBuffer sb = new StringBuffer();
+
+            sb.append("{'name':'baekgooni', 'age':'12', 'height':'188', 'weight':'65'}");
+            bw.write(sb.toString());
             bw.flush();
             bw.close();
+
+            System.out.println("Send : " + sb.toString());
 
             // 보내고 결과값 받기
             int responseCode = conn.getResponseCode();
             if (responseCode == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
+                sb = new StringBuffer();
                 String line = "";
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
                 }
-                System.out.println(sb.toString());
+                System.out.println("Recv : "+sb.toString());
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
