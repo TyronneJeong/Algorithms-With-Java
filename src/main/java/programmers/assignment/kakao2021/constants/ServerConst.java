@@ -1,4 +1,4 @@
-package programmers.assignment.kakao2021.constant;
+package programmers.assignment.kakao2021.constants;
 
 public final class ServerConst {
     /**
@@ -15,8 +15,7 @@ public final class ServerConst {
      * Default Methods
      */
     public final class DEFAULT_METHOD {
-        public static final String GET = "doGet";
-        public static final String POST = "doPost";
+        public static final String DO_PROCESS = "doProcess";
     }
 
     /**

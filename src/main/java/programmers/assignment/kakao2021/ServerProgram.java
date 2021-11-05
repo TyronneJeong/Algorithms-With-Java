@@ -35,7 +35,7 @@ public class ServerProgram {
         /**
          * 멤버 정의
          */
-        private final String DEFAULT_HOSTNAME = "localhost";
+        private final String DEFAULT_HOSTNAME = "localhost"; // 서버 자기 IP 를 대입하는 방법은?!?
         private final int PORT = 7777;
         private final int BACK_LOG = 0;
 
@@ -51,7 +51,7 @@ public class ServerProgram {
         private KakaoServer() throws IOException {
             InetSocketAddress inetSocketAddress = new InetSocketAddress(DEFAULT_HOSTNAME, PORT);  // 서버 주소 객체 생성
             server = HttpServer.create(inetSocketAddress, BACK_LOG);  // 서버 생성
-            server.createContext("/", new MainHandler());
+            server.createContext("/", MainHandler.getInstance());
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 @Override
                 public void run() {
