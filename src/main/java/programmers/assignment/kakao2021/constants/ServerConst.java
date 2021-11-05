@@ -19,6 +19,13 @@ public final class ServerConst {
     }
 
     /**
+     * Conent Type
+     */
+    public final class CONTENT_TYPE {
+        public static final String JSON = "application/json";
+    }
+
+    /**
      * Controller Const
      */
     public final class CONTROLLER_ADDR {

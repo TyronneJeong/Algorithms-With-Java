@@ -80,11 +80,30 @@ public class MainHandler implements HttpHandler {
             String xAuthToken = "";
             // K, V 헤더정보
             for (Map.Entry<String, List<String>> item: reqHeaders.entrySet()) {
+                System.out.println(item.getKey());
                 // [Http header - Accept]
                 if(item.getKey().equalsIgnoreCase("Accept")){
                     System.out.println(item.getValue().toString().startsWith(""));
                 }
+
+                // Content-Type Catch
+                if(item.getKey().equalsIgnoreCase("Content-type")){
+                    contentType = item.getValue().get(0);
+                    System.out.println("Set Content-Type : " + contentType);
+                }
+
+                // Content-Type Catch
+                if(item.getKey().equalsIgnoreCase("X-Auth-Token")){
+                    contentType = item.getValue().get(0);
+                    System.out.println("Set Content-Type : " + contentType);
+                }
             }
+
+            xAuthToken = reqHeaders.get("X-Auth-Token").get(0);
+            System.out.println("xAuthToken >> "+xAuthToken);
+
+
+
             // TODO 컨텐츠 타입이 정의되는 곳이 Accept 인지
             // Contetn-Type 이라는 바디항목이 따로 있는건지 확인이 필요함.
             // 이걸 하려면 클라이언트 프로그램 작성이 필요함.
@@ -104,7 +123,8 @@ public class MainHandler implements HttpHandler {
             instance = constructor.newInstance();
 
             /* GET/POST */
-            if(reqMethod.equals(ServerConst.DEFAULT.GET)){
+            if(contentType.equals(ServerConst.CONTENT_TYPE.JSON)){
+                // JSON TO MAP
                 inputMap = new HashMap();
                 inputMap.put("data", "sampledata");
             } else {
