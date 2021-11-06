@@ -102,12 +102,11 @@ public class MainHandler implements HttpHandler {
             } catch (Exception e) {
                 e.printStackTrace();
                 errCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+                System.out.println("오류발생!!"+errCode);
             } finally {
                 br.close();
-                os.close();
             }
         }
-
         if(errCode > 0) {
             StringBuffer sb = new StringBuffer();
             sb.append("다음과 같은 오류가 발생 하였어요.</br>" + errCode +"Error</br>");
@@ -122,12 +121,16 @@ public class MainHandler implements HttpHandler {
                     sb.append("알수 없는 서버 오류가 발생 했네요?</br>");
                     break;
                 default:
-                    break;
+                    System.out.println("알수 없는 에러 코드");
+                    return;
             }
+
+            System.out.println("return message : " + sb.toString());
+
             content = makeStrToByteArr(sb.toString());
             resHeaders.add("Content-Type", "text/html;charset=UTF-8");
             resHeaders.add("Content-Length", String.valueOf(content.length));
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, content.length);
+            exchange.sendResponseHeaders(errCode, content.length);
             os.write(content);
             os.close();
         }

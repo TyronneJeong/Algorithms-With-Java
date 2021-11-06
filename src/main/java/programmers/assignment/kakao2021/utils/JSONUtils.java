@@ -70,7 +70,7 @@ public class JSONUtils {
             Object instance = constructor.newInstance(map);
             Method m = joCls.getDeclaredMethod("toString");
             m.setAccessible(true);
-            return (String) m.invoke(instance);
+            rtn = (String) m.invoke(instance);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

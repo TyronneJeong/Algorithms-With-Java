@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ServerProgram {
     /**
@@ -19,7 +23,20 @@ public class ServerProgram {
             kakaoServer = new KakaoServer();
             kakaoServer.startServer();
 
-            System.out.println("Please press 'Enter' to stop the server.");
+            /* 시스템 모니터링 */
+            ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("thread is running..");
+//                    System.out.println(String.format("[%s][HTTP SERVER][STOP]",
+//                            new SimpleDateFormat("yyyy-MM-dd H:mm:ss")
+//                                    .format(new Date())+" 작업중"));
+                }
+            }, 0, 10, TimeUnit.SECONDS);
+
+            // Enter를 입력하면 종료
+            System.out.print("Please press 'Enter' to stop the server.\n");
             System.in.read();
         } catch (IOException e) {
             e.printStackTrace();

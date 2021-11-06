@@ -115,7 +115,11 @@ public class ClientProgram {
 
     public static void main(String[] args) {
         try {
-            URL url = new URL("http://localhost:7777/locations");
+            String direction;
+            direction = "start";
+//            direction = "locations";
+//            direction = "trucks";
+            URL url = new URL("http://localhost:7777/"+direction);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(ServerConst.DEFAULT.POST);
             conn.setRequestProperty("Content-Type", "application/json");
@@ -127,7 +131,9 @@ public class ClientProgram {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuffer sb = new StringBuffer();
 
-            sb.append("{'name':'baekgooni', 'age':'12', 'height':'188', 'weight':'65'}");
+            /* start */
+            sb.append("{'problem':'1'}");
+
             bw.write(sb.toString());
             bw.flush();
             bw.close();
@@ -136,7 +142,8 @@ public class ClientProgram {
 
             // 보내고 결과값 받기
             int responseCode = conn.getResponseCode();
-            if (responseCode == 200) {
+            System.out.println("response code >> " + responseCode);
+            if (responseCode==200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 sb = new StringBuffer();
                 String line = "";
