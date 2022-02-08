@@ -1,29 +1,32 @@
 package programmers;
 
 import programmers.kakao.FailureRate;
-import programmers.naverfinancial.*;
+
+import programmers.sample.sample;
 
 public class Programmers {
     public static void main(String[] args) {
         // N개의 최소 공배수
-        //Sample sample = new Sample();
-        //sample.exec();
+
+
+        sample s = new sample();
+        s.exec();
 
         // 알고리즘 문제 1번
-        AlgorithmTest_01 algorithmTest_01 = new AlgorithmTest_01();
-        algorithmTest_01.exec();
-
-        // 알고리즘 문제 2번
-        AlgorithmTest_02 algorithmTest_02 = new AlgorithmTest_02();
-        algorithmTest_02.exec();
-
-        // 알고리즘 문제 3번
-        AlgorithmTest_03 algorithmTest_03 = new AlgorithmTest_03();
-        algorithmTest_03.exec();
-
-        // 알고리즘 문제 4번
-        AlgorithmTest_04 algorithmTest_04 = new AlgorithmTest_04();
-        algorithmTest_04.exec();
+//        AlgorithmTest_01 algorithmTest_01 = new AlgorithmTest_01();
+//        algorithmTest_01.exec();
+//
+//        // 알고리즘 문제 2번
+//        AlgorithmTest_02 algorithmTest_02 = new AlgorithmTest_02();
+//        algorithmTest_02.exec();
+//
+//        // 알고리즘 문제 3번
+//        AlgorithmTest_03 algorithmTest_03 = new AlgorithmTest_03();
+//        algorithmTest_03.exec();
+//
+//        // 알고리즘 문제 4번
+//        AlgorithmTest_04 algorithmTest_04 = new AlgorithmTest_04();
+//        algorithmTest_04.exec();
 
     }
 
