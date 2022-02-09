@@ -1,6 +1,7 @@
 package leetcode;
 
 import leetcode.easy.PalindromeNumber;
+import leetcode.easy.RomanToInteger;
 
 public class LeetCode {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class LeetCode {
 //        intToRoman.exec();
 
         // 펠린드롬
-        PalindromeNumber palindromeNumber = new PalindromeNumber();
-        palindromeNumber.exec();
+        RomanToInteger logic = new RomanToInteger();
+        logic.exec();
     }
 }
