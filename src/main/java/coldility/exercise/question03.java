@@ -14,7 +14,7 @@ public class question03 {
     private static int solution(int[] A){
         // collecting duplicated number to list
         HashMap hmap = new HashMap<Integer, Integer>();
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<Integer>(20);
         for(int ix=0; ix < A.length; ix++){
             if(hmap.get(A[ix]) != null){
                 list.add(A[ix]);
