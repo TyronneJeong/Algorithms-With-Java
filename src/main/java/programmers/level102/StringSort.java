@@ -34,7 +34,7 @@ public class StringSort {
                 return Character.compare(o2, o1);
             }});
         StringBuffer sb = new StringBuffer();
-        list.forEach(sb::append);
+        list.forEach(sb::append); // 인상깊다.
         return sb.toString();
     }
 }
