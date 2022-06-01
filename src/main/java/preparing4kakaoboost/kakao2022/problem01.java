@@ -74,42 +74,65 @@ package preparing4kakaoboost.kakao2022;
 //
 // “ryan”이 “con”을 4번 신고했으나, 주어진 조건에 따라 한 유저가 같은 유저를 여러 번 신고한 경우는 신고 횟수 1회로 처리합니다. 따라서 “con”은 1회 신고당했습니다. 3번 이상 신고당한 이용자는 없으며, “con”과 “ryan”은 메일을 받지 않습니다. 따라서 [0, 0]을 return 합니다.
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 public class problem01 {
     public void exec() {
         String[] id_list = null;
         String[] report = null;
-        int k = 0;
+        int k;
 
-        // # test date 01
+        // 입력데이터 1
         id_list = new String[]{"muzi", "frodo", "apeach", "neo"};
         report = new String[]{"muzi frodo","apeach frodo","frodo neo","muzi neo","apeach muzi"};
         k = 2;
-        // EXPECTED ANSWER IS : [2,1,1,0]
-        // # test date 01
+        // >> 예상답안 : [2,1,1,0]
+
+        // 입력데이터 2
 //        id_list = new String[]{"con", "ryan"};
 //        report = new String[]{"ryan con", "ryan con", "ryan con", "ryan con"};
 //        k = 3;
-        // EXPECTED ANSWER IS : [0,0]
+        // >> 예상답안 : [0,0]
 
-        solution(id_list, report, k);
+        Arrays.stream(solution(id_list, report, k)).forEach(answer -> System.out.println(answer));
     }
 
-    private int[] solution(String[] id_list, String[] report, int k)
-    {
-        // 유저간 신고기능
-        // 신고한 대상 , 당사자 모두 저장 필요
-        // 신고대상은 k회 누적시 차단
-        // 신고자는 차단회원이 발생시 그 사실을 통보
+    public int[] solution(String[] id_list, String[] report, int k) {
+        // 신고자 의 누적 신고 횟수 저장용 맵
+        HashMap<String, Integer> reporterMap = new HashMap<>(); // 신고횟수저장용
+        HashMap<String, HashSet> respondentMap = new HashMap<>(); // 신고자 목록 저장용
+        HashMap<String, Integer> noticeMap = new HashMap<>(); // 신고자 알림용
 
-        // 유저별로
-        // id 별 피신고횟수, 신고한 사람들
+        // 초기화
+        for(int ix = 0; ix < id_list.length; ix ++){
+            reporterMap.put(id_list[ix], 0);
+            noticeMap.put(id_list[ix], 0);
+            respondentMap.put(id_list[ix], new HashSet());
+        }
 
-        id_list.
+        String Key =  "";
+        String Val =  "";
+        // 피신고인과 신고자 맵
+        for(int ix = 0; ix < report.length; ix ++){
+            Key = report[ix].split(" ")[0]; // 신고자
+            Val = report[ix].split(" ")[1]; // 피신고인
+            if(respondentMap.get(Val).add(Key)){ // key 삽입이 가능한 경우 (1회차인경우)
+                reporterMap.put(Val, reporterMap.get(Val) + 1);
+            }
+        }
 
+        // 누적 신고 확인 후 차단 자 지정
+        for(String reportedUser : reporterMap.keySet()){
+            if(reporterMap.get(reportedUser) >= k){
+                respondentMap.get(reportedUser).forEach(name -> noticeMap.put((String)name, noticeMap.get((String)name) + 1));
+            }
+        }
 
-
-
-        int[] answer = null;
+        int[] answer = new int[id_list.length];
+        int loopCnt = 0;
+        for(String id : id_list) answer[loopCnt++] = noticeMap.get(id);
         return answer;
     }
 }

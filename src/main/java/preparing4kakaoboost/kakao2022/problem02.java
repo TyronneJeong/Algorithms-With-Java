@@ -53,10 +53,54 @@ package preparing4kakaoboost.kakao2022;
 
 public class problem02 {
     public void exec() {
-        solution();
+        //System.out.println("정답은 : " + solution(437674, 3)); // 답 : 3
+        System.out.println("정답은 : " + solution(110011, 10)); // 답 : 2
     }
 
-    private void solution() {
-        System.out.println("hi");
+    // ****************************
+    // 10진수 -> n 진수로 변환
+    // Integer.toString(n, k);
+    // n -> 10진수로  변환
+    // Integer.parseInt("10", k);
+    // ****************************
+
+    public int solution(int n, int k) {
+        char[] chArr = Integer.toString(n, k).toCharArray();
+        StringBuffer sb = new StringBuffer(chArr.length);
+        int answer = 0;
+        // position 확인
+        for(int ix = 0; ix < chArr.length; ix ++){
+            // 글자를 담는다.
+            if(chArr[ix] != '0'){
+                sb.append(chArr[ix]);
+                if(ix + 1 == chArr.length) {
+                    if( isPrimeNumb(Long.parseLong(sb.toString())) ){
+                        answer++;
+                    }
+                }
+            } else {
+                if(sb.length() > 0){
+                    if( isPrimeNumb(Long.parseLong(sb.toString())) ){
+                        answer++;
+                    }
+                }
+                sb.delete(0, sb.length());
+            }
+        }
+        return answer;
+    }
+
+    // 소수판별
+    private boolean isPrimeNumb(long n){
+        if( n == 1 ) return false; // 1은 소수가 아니다.
+        if( n == 2 ) return true; // 2는 소수다.
+        if( n % 2 == 0 ) return false; // 2보다 큰 짝수는 소수가 아니다.
+        int count = 0;
+        for(long i = 2; i <= Math.sqrt(n); i++){
+            if( n % i == 0 ){
+                count++;
+            }
+        }
+        return count == 0;
     }
 }

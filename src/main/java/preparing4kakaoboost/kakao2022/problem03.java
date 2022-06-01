@@ -140,12 +140,103 @@ package preparing4kakaoboost.kakao2022;
 //
 //위와 같은 방법으로 누적 주차 시간을 계산한 후, total_time[i] > 0 를 만족하는 모든 i번 차량에 대해서, 오름차순으로 주차 요금을 계산해서 배열에 담으면 문제를 해결할 수 있습니다.
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 public class problem03 {
     public void exec() {
-        solution();
+        int[] fees = null;
+        String[] records = null;
+
+        fees = new int[]{180, 5000, 10, 600};
+        records = new String[]{"05:34 5961 IN", "06:00 0000 IN", "06:34 0000 OUT", "07:59 5961 OUT", "07:59 0148 IN", "18:59 0000 IN", "19:09 0148 OUT", "22:59 5961 IN", "23:00 5961 OUT"};
+        // [14600, 34400, 5000]
+
+//        fees = new int[]{120, 0, 60, 591};
+//        records = new String[]{"16:00 3961 IN","16:00 0202 IN","18:00 3961 OUT","18:00 0202 OUT","23:58 3961 IN"};
+//        // [0, 591]
+
+        fees = new int[]{1, 461, 1, 10};
+        records = new String[]{"00:00 1234 IN"};
+        // [14841]
+
+        Arrays.stream(solution(fees, records)).forEach(e-> System.out.println(e));
+
     }
 
-    private void solution() {
-        System.out.println("hi");
+    public int[] solution(int[] fees, String[] records) {
+        HashMap<String, Integer> mPrice = new HashMap<>();
+        HashMap<String, Integer> mTimeRecords = new HashMap<>();
+
+        String[] record = null;
+        String sRecordTime = null;
+        String sCarNo = null;
+        String sInOut = null;
+
+        int iMaximumTime = parseTimeToMinute("23:59");
+        int iMinimumTime = fees[0];
+        int iMinimumCharge = fees[1];
+        int iUnitSize = fees[2];
+        int iSegCharge = fees[3];
+
+        // 들어오고 나간걸로 계산하기
+        for(String item : records){
+            record = item.split(" ");
+            sRecordTime = record[0];
+            sCarNo = record[1];
+            sInOut = record[2];
+
+            // IN & OUT
+            if( sInOut.equals("IN") ){
+                mTimeRecords.put(sCarNo, parseTimeToMinute(sRecordTime) * -1); // 입고
+            } else {
+                // 재입고의 경우 이용시간 누적
+                if( mPrice.containsKey(sCarNo) ){
+                    // 이전 이용시간 + 현재 이용시간
+                    mPrice.put(sCarNo
+                            , mPrice.get(sCarNo) // 기존이용시간
+                            + parseTimeToMinute(sRecordTime) // 출고시간 - 입고시간 = 이용시간
+                                    + mTimeRecords.get(sCarNo)
+                            );
+                } else {
+                    mPrice.put(sCarNo
+                            , parseTimeToMinute(sRecordTime) // 출고시간 - 입고시간 = 이용시간
+                                    + mTimeRecords.get(sCarNo)
+                    );
+                }
+                mTimeRecords.put(sCarNo, null);
+            }
+        }
+
+        // 출차정보가 미존재하는 경우 23:59 분  출차로 가정하여 계산시킨다.
+        for(String key : mTimeRecords.keySet()){
+            // 출차정보 미존재 확인
+            if(mTimeRecords.get(key) != null){
+                mPrice.put(key, (mPrice.get(key) != null ? mPrice.get(key) : 0)
+                        + iMaximumTime + mTimeRecords.get(key));
+            }
+            // 요금계산
+            if(mPrice.get(key) < iMinimumTime){
+                mPrice.put(key, iMinimumCharge);
+            } else {
+                mPrice.put(key,
+                        ( (((mPrice.get(key) - iMinimumTime) / iUnitSize))
+                                + ((mPrice.get(key) - iMinimumTime) % iUnitSize > 0 ? 1 : 0)
+                        ) * iSegCharge + iMinimumCharge );
+            }
+        }
+
+        // 리턴은 차량번호 오름차순
+        int[] answer = new int[mPrice.size()];
+        int idx = 0;
+        for(Object key : mPrice.keySet().stream().sorted().toArray()){
+            answer[idx++] = mPrice.get(key);
+        }
+        return answer;
+    }
+
+    // 시:분 을 분으로 변환한다.
+    private int parseTimeToMinute(String time){
+        return (Integer.parseInt(time.split(":")[0]) * 60) + (Integer.parseInt(time.split(":")[1]));
     }
 }

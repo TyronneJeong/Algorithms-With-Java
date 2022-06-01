@@ -151,12 +151,46 @@ package preparing4kakaoboost.kakao2022;
 //
 //중복 조합으로 푸는 경우에도 10점부터 0점까지(11가지의 경우) 총, 10발의 화살을 쏘는 게 되기 때문에 11H10 = (11 + 10 – 1) C10 = 20C10 = 184,756으로 모든 경우의 수를 확인하면서 충분히 제한 시간 안에 문제를 해결할 수 있습니다.
 
+import java.util.Arrays;
+
 public class problem04 {
     public void exec() {
-        solution();
+        int[] info;
+        int n;
+
+        info = new int[]{2,1,1,1,0,0,0,0,0,0,0}; // 어피치 득점
+        n = 5; // 화살의 수
+        // [0,2,2,0,1,0,0,0,0,0,0]
+
+        info = new int[]{1,0,0,0,0,0,0,0,0,0,0};
+        n = 1;
+        // [-1]
+
+        info = new int[]{0,0,1,2,0,1,1,1,1,1,1};
+        n = 9;
+        // [1,1,2,0,1,2,2,0,0,0,0]
+
+        info = new int[]{0,0,0,0,0,0,0,0,3,4,3};
+        n = 10;
+        // [1,1,1,1,1,1,1,1,0,0,2]
+
+        Arrays.stream(solution(n, info)).forEach(e-> System.out.println(e));
     }
 
-    private void solution() {
-        System.out.println("hi");
+    // 완전탐색문제
+    public int[] solution(int n, int[] info) {
+        int[] answer = {};
+
+
+        // 모든 5가지 조합 수를 다 찾아서
+        // 조합 가능한 모든 수를 만드는 방법 -> while 또는 재귀
+
+        // 어피치가 득점한 점수 보다 가장 큰 차이가 나는 숫자를 고르면 됨
+
+        // 재귀의 종료조건은?
+
+        return answer;
     }
+
+
 }
