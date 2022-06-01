@@ -158,39 +158,114 @@ public class problem04 {
         int[] info;
         int n;
 
-        info = new int[]{2,1,1,1,0,0,0,0,0,0,0}; // 어피치 득점
-        n = 5; // 화살의 수
+//        info = new int[]{2,1,1,1,0,0,0,0,0,0,0}; // 어피치 득점
+//        n = 5; // 화살의 수
         // [0,2,2,0,1,0,0,0,0,0,0]
 
-        info = new int[]{1,0,0,0,0,0,0,0,0,0,0};
-        n = 1;
+//        info = new int[]{1,0,0,0,0,0,0,0,0,0,0};
+//        n = 1;
         // [-1]
 
         info = new int[]{0,0,1,2,0,1,1,1,1,1,1};
         n = 9;
         // [1,1,2,0,1,2,2,0,0,0,0]
-
-        info = new int[]{0,0,0,0,0,0,0,0,3,4,3};
-        n = 10;
+//
+//        info = new int[]{0,0,0,0,0,0,0,0,3,4,3};
+//        n = 10;
         // [1,1,1,1,1,1,1,1,0,0,2]
-
-        Arrays.stream(solution(n, info)).forEach(e-> System.out.println(e));
+        solution(n, info);
+        System.out.println("베스트 스코어는 " + bestScore);
+        System.out.println("어피치 패턴은 >>" + Arrays.toString(this.info));
+        System.out.println("베스트 패턴은 >>" + Arrays.toString(bestPattern));
     }
 
     // 완전탐색문제
+    private int bestScore = 0;
+    private int apeachScore = 0;
+
+    private int[] info;
+    private int[] recordPattern;
+    private int[] bestPattern;
+
     public int[] solution(int n, int[] info) {
-        int[] answer = {};
-
-
-        // 모든 5가지 조합 수를 다 찾아서
-        // 조합 가능한 모든 수를 만드는 방법 -> while 또는 재귀
-
-        // 어피치가 득점한 점수 보다 가장 큰 차이가 나는 숫자를 고르면 됨
-
-        // 재귀의 종료조건은?
-
-        return answer;
+        this.info = info;
+        this.recordPattern = new int[info.length];
+        getMaximumScoreForWin(0, n);
+        if(bestPattern == null){
+            return new int[]{-1};
+        } else {
+            return bestPattern;
+        }
     }
 
+    int goalScore = 0;
+    int currentScore = 0;
+    private void getMaximumScoreForWin(int cursor, int arrows){
+        // 종료조건
+        if(cursor == this.info.length || arrows == 0){ // 커서가 마지막에 도착 하거나 화살을 모두 사용 하면 종료
+            // 마지막에 와 있는데도 화살이 남아 있으면 마지막 행에 사용
+            if( arrows > 0 ){
+                recordPattern[cursor-1] += arrows;
+            }
+            // 내가 맞힌 타깃의 수에 따른 상대의 득점도 변경 되므로 재산출 한다.
+            this.currentScore = sumScore(0);
+            this.apeachScore  = sumScoreApeach(0);
 
+            if(currentScore > apeachScore){ // 총 점 승리 여부
+                if(currentScore-apeachScore > bestScore){ // 기존 최고 점수 갱신 여부
+                    bestScore = currentScore-apeachScore;
+                    bestPattern = Arrays.copyOf(recordPattern, recordPattern.length);
+                }
+                if(currentScore-apeachScore == bestScore) { // 기존 최고 점수 갱신 여부
+                    if(isAvailable2Change()){ // 가장 낮은 점수의 히트 수
+                        bestPattern = Arrays.copyOf(recordPattern, recordPattern.length);
+                    }
+                }
+            }
+            // 초기화.. 얘가 남아서 자꾸 다음 행에 반영됨...
+            recordPattern[cursor-1] = 0;
+            return;
+        }
+        // 이기는 조건 - info 보다 1점 더 많으면 됨
+        goalScore = (this.info[cursor] + 1);
+        if(arrows - goalScore >= 0){
+            recordPattern[cursor] = goalScore;
+            getMaximumScoreForWin(cursor + 1, (arrows - goalScore));
+        }
+        // 지는 조건
+        recordPattern[cursor] = 0;
+        getMaximumScoreForWin(cursor + 1, arrows);
+    }
+
+    // 나의 패에 따라 상대가 득점 하는 점수가 유동적으로 변화한다.
+    // 나의 득점 합을 계산
+    private int sumScore(int cursor){
+        if(cursor > 10) return 0;
+        if(this.recordPattern[cursor] > 0 && this.recordPattern[cursor] > this.info[cursor]){
+            return (this.recordPattern[cursor] > this.info[cursor] ? 10 - cursor : 0) + sumScore(cursor + 1);
+        } else {
+            return sumScore(cursor + 1);
+        }
+    }
+
+    // 어피치의 득점 합을 계산
+    private int sumScoreApeach(int cursor){
+        if(cursor > 10) return 0;
+        if(this.info[cursor] > 0 && this.info[cursor] >= this.recordPattern[cursor]){
+            return (10 - cursor) + sumScoreApeach(cursor + 1);
+        } else {
+            return sumScoreApeach(cursor + 1);
+        }
+    }
+
+    // 바꿀수 있는지 보자
+    private boolean isAvailable2Change(){
+        for(int ix = 10; ix > 5; ix --){
+            if(bestPattern[ix] < recordPattern[ix]){
+                System.out.println(ix);
+                return true;
+            }
+        }
+        return false;
+    }
 }

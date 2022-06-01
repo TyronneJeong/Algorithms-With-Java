@@ -46,7 +46,8 @@ public class TargetNumber {
         target = 3;
         // 5
 
-        System.out.println(solution(numbers, target));
+        solution(numbers, target);
+//        System.out.println(solution(numbers, target));
     }
 
 
@@ -92,12 +93,22 @@ public class TargetNumber {
             System.out.println(Arrays.toString(answer)); // 조합된 결과 출력
             return 0;
         }
-
-        // Step up 한 뒤 할 행동
+        // 발산형 조건 들
         for( int iy = 0; iy < width; iy++ ){
-            answer[ix] = iy;
-            printAllNumbers(width, ix+1); // 반복 연결 고리
+            // 조건에 따른 진행 여부 - 가지를 분기 할 수 있다.
+            // [문제에서 동일 숫자는 하나의 숫자로 본다는 조건이 들어가는 경우가 있음.]
+            if(!isContains(iy, 0, ix)){
+                answer[ix] = iy;
+                printAllNumbers(width, ix+1); // 반복 연결 고리
+            }
         }
-        return 0;
+        return -1;
+    }
+
+    // 배열내 타겟 넘버의 포함 여부를 검사
+    private boolean isContains(int target, int startIdx, int endIdx){
+        if(startIdx == endIdx) return false;
+        if(this.answer[startIdx] == target) return true;
+        return isContains(target, startIdx+1, endIdx);
     }
 }

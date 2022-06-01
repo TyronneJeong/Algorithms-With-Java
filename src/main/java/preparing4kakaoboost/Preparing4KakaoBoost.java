@@ -16,7 +16,7 @@ public class Preparing4KakaoBoost {
     public static void main(String[] args) {
         problem04 s = new problem04();
         s.exec();
-        TargetNumber tn = new TargetNumber();
-        tn.exec();
+//        TargetNumber tn = new TargetNumber();
+//        tn.exec();
     }
 }
