@@ -6,12 +6,17 @@ import analysisofalgorithms.exercise.L27Hashing;
 public class AnalysisOfAlgorithms {
 
     public static void main(String[] args) {
-//
-//        L05Powerset l05Powerset = new L05Powerset();
-//        L06Permutation l06Permutation = new L06Permutation();
-//        l06Permutation.solution();
+        int z;
+        System.out.println("1번 유형");
+        z= 0;
+        for(int ix = 0; ix < 10; ix = z++){
+            System.out.println(ix);
+        }
 
-        L27Hashing l27Hashing = new L27Hashing();
-        l27Hashing.solution();
+        System.out.println("2번 유형");
+        z= 0;
+        for(int ix = 0; ix < 10; ix = ++z){
+            System.out.println(ix);
+        }
     }
 }

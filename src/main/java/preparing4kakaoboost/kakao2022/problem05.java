@@ -69,12 +69,54 @@ package preparing4kakaoboost.kakao2022;
 //
 //이러한 방식으로 완전 탐색이 종료되면 최대로 모을 수 있는 양의 수를 구할 수 있습니다.
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class problem05 {
     public void exec() {
-        solution();
+        int[] info;
+        int[][] edges;
+
+        info = new int[]{0,0,1,1,1,0,1,0,1,0,1,1}; // i번 노드에 있는 0:양 or 1:늑대 - 0번 노드는 항상 양
+        edges = new int[][]{{0,1},{1,2},{1,4},{0,8},{8,7},{9,10},{9,11},{4,3},{6,5},{4,6},{8,9}}; //
+        // 5
+        info = new int[]{0,1,0,1,1,0,1,0,0,1,0};
+        edges = new int[][]{{0,1},{0,2},{1,3},{1,4},{2,5},{2,6},{3,7},{4,8},{6,9},{9,10}};
+        // 5
+        solution(info, edges);
     }
 
-    private void solution() {
-        System.out.println("hi");
+
+
+    private int[] info;
+    private HashMap<String, Integer> edgeMap;
+    public int solution(int[] info, int[][] edges) {
+        this.info = info;
+
+        edgeMap = new HashMap<>();
+        String key = "";
+        int value = 0;
+
+        // [0, 1] : + or - 식으로 저장한다.
+        for(int ix = 0; ix < edges.length; ix ++){
+            key = Arrays.toString(edges[ix]);
+            value = this.info[ix+1];
+            edgeMap.put(key, value);
+        }
+
+
+        int answer = 0;
+        return answer;
+    }
+
+
+    private void findAnswer(int cursor){
+        // 종료식
+
+
+
+        // 호출식
     }
 }

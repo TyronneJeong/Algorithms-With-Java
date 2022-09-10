@@ -1,4 +1,4 @@
-package preparing4kakaoboost.dfsbfs;
+package preparing4kakaoboost.exercise;
 
 import java.util.Arrays;
 
